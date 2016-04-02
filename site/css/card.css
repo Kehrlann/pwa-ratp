@@ -1,0 +1,29 @@
+/****************************
+ *                          *
+ *  CARD                    *
+ *                          *
+ ****************************/
+.card {
+    padding: 16px;
+    position: relative;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 2px;
+    margin: 16px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.card .stop-name
+{
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 2em;
+    margin-right: 20px;
+}
+
+.card .date
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}

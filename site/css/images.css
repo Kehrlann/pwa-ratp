@@ -1,0 +1,11 @@
+.card .icon {
+  background-repeat: no-repeat;
+  background-size: contain;
+  width:64px;
+  height:64px;  
+}
+
+.icon-6
+{
+    background-image: url("/images/6.svg");
+}

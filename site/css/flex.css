@@ -1,0 +1,35 @@
+/********************************************
+ *                                          *
+ *  Mini framework "flex" :                 *
+ *                                          *
+ *  flex-row    :   container en ligne      *
+ *  flex-column :   container en colonne    *
+ *  flex-X      :   X entre 0 et 10, permet *
+ *                  de déterminer shrink    *
+ *                  grow.                   *
+ *                                          *
+ ********************************************/
+.flex-row
+{
+    display:            flex;
+    flex-direction:     row;
+    justify-content:    space-between;
+    align-items:        stretch;    
+}
+
+.flex-column
+{
+    display:            flex;
+    flex-direction:     column;
+    justify-content:    space-between;
+}
+
+.flex-0
+{
+    flex:               0   0   auto;
+}
+
+.flex-1
+{
+    flex:               1   1   auto;
+}
