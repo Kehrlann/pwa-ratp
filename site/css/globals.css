@@ -1,0 +1,6 @@
+.ellipsis
+{
+    overflow-x:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
