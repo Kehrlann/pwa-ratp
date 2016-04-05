@@ -14,7 +14,7 @@
     display:            flex;
     flex-direction:     row;
     justify-content:    space-between;
-    align-items:        stretch;    
+    align-items:        stretch;
 }
 
 .flex-column
@@ -22,6 +22,17 @@
     display:            flex;
     flex-direction:     column;
     justify-content:    space-between;
+    align-items:        stretch;
+}
+
+.flex-jc-space-around
+{
+    justify-content:    space-around !important;
+}
+
+.flex-ai-center
+{
+    align-items:        center !important;
 }
 
 .flex-0
@@ -32,4 +43,11 @@
 .flex-1
 {
     flex:               1   1   auto;
+}
+
+.ellipsis
+{
+    overflow-x:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

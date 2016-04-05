@@ -23,10 +23,10 @@
         </header>
 
         <!------------------------>
-        <!-- LOADING SPINNER    -->
+        <!-- CARDS              -->
         <!------------------------>
-        <main class="main">
-            <div class="card cardTemplate flex-column">
+        <main class="main flex-column">
+            <div class="card cardTemplate flex-0 flex-column">
                 <div class="stop-key" hidden></div>
                 <div class="line-key" hidden></div>
 
@@ -37,10 +37,22 @@
 
                 <div class="flex-row flex-0 mt5">
                     <div class="line-number flex-0 icon icon-6"></div>
-                    <div class="direction-name flex-0"></div>
-                    <div class="first-stop flex-1"></div>
-                    <div class="second-stop flex-1"></div>
-                    <div class="third-stop flex-1"></div>
+                    <div class="directions flex-1 flex-column flex-jc-space-around">
+                        <div class="flex-0 ellipsis">Saint-Denis-Universite / Asnieres-Gennevilliers Les Courtilles</div>
+                        <div class="flex-0 ellipsis">Nation</div>
+                    </div>
+                    <div class="stop flex-1 flex-column flex-jc-space-around flex-ai-center">
+                        <div class="flex-0">1 mn</div>
+                        <div class="flex-0">3 mn</div>
+                    </div>
+                    <div class="stop flex-1 flex-column flex-jc-space-around flex-ai-center">
+                        <div class="flex-0">4 mn</div>
+                        <div class="flex-0">5 mn</div>
+                    </div>
+                    <div class="stop flex-1 flex-column flex-jc-space-around flex-ai-center">
+                        <div class="flex-0">7 mn</div>
+                        <div class="flex-0">8 mn</div>
+                    </div>
                 </div>
             </div>
         </main>
