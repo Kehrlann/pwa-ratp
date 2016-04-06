@@ -223,4 +223,6 @@
 
     app.loadDataForAll();
 
+    $("#butRefresh").click(function(e){ app.loadDataForAll();});
+
 })();
