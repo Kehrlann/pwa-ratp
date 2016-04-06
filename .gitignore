@@ -6,4 +6,4 @@ api.json
 #################################################
 # Ignore compiled stuff, logs                   #
 #################################################
-/ProchainsPassages/app/build
+node_modules

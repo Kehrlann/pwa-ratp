@@ -1,0 +1,13 @@
+{
+    "name": "ratp-rest-proxy",
+    "version": "1.0.0",
+    "description": "Simple proxy to HTTP ...",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "author": "daniel@garnier.wf",
+    "dependencies": {
+        "express": "~4.4.5",
+        "request": "~2.70.0"
+    }
+}
