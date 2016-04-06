@@ -2,12 +2,10 @@
     var app = {
         isLoading: true,
         visibleCards: {},
-        spinner: document.querySelector('.loader'),
-        cardTemplate: document.querySelector('.cardTemplate'),
-        container: document.querySelector('.main')
+        spinner: $('.loader'),
+        cardTemplate: $('.cardTemplate'),
+        container: $('.main')
     };
-
-    var api = null;
 
     var sampleData =
     {
@@ -30,14 +28,16 @@
         update_time:    new Date().getTime()
     };
 
+    var _makeUrl = function(line_id, stop_id){ return "/api?cmd=getNextStopsRealtime&stopArea=" + stop_id + "&line=" + line_id  };
+
     var _padWithZero = function(input)
     {
         return input < 10 ? "0" + input : input;
     };
 
-    var _formatDate = function(dateAsInt)
+    var _formatDate = function(dateAsString)
     {
-        var tempDate    =   new Date((dateAsInt ? dateAsInt : new Date().getTime()));
+        var tempDate    =   dateAsString ? new Date(dateAsString) : new Date();
         var day         =   _padWithZero(tempDate.getDay());
         var month       =   _padWithZero(tempDate.getMonth());
         var year        =   tempDate.getFullYear();
@@ -132,39 +132,6 @@
                 ];
     };
 
-
-    app.bootstrap = function()
-    {
-        if(!api)
-        {
-            $   .get    ('/data/api.json')
-                .then   (   function(data)
-                            {
-                                api = data;
-                                api.url_for = function(line_id, stop_id){ return api.baseUri + "?keyapp=" + api.key + "&cmd=getNextStopsRealtime&stopArea=" + stop_id + "&line=" + line_id  };
-                            }
-                        )
-                .then   (   function()
-                            {
-                                app.loadDataForAll();
-                            }
-                        );
-
-            // var request = new XMLHttpRequest();
-            // request.onreadystatechange = function() {
-            //     if (request.readyState === XMLHttpRequest.DONE) {
-            //         if (request.status === 200) {
-            //             api = JSON.parse(request.response);
-            //             api.url_for = function(line_id, stop_id){ return api.baseUri + "?keyapp=" + api.key + "&cmd=getNextStopsRealtime&stopArea=" + stop_id + "&line=" + line_id  };
-            //             app.loadDataForAll();
-            //         }
-            //     }
-            // };
-            // request.open('GET', '/data/api.json');
-            // request.send();
-        }
-    };
-
     app.loadDataForAll = function()
     {
         app .getDatabase()
@@ -178,21 +145,43 @@
 
     app.getDataFor =    function(data)
     {
-        if (api!=null)
-        {
-            app.updateMetroCard(data);
 
-            $   .ajax   (   {
-                                url : api.url_for(data.line_id, data.stop_id),
-                                crossDomain: true
-                            }
-                        )
-                .then   (   function(data)
-                            {
-                                console.log(data);
-                            }
-                        );
-        }
+        app.updateMetroCard(data);
+
+        $   .get    (   _makeUrl(data.line_id, data.stop_id) )
+            .then   (   function(resp)
+                        {
+                            var time    =   $(resp) .find("nextStopsRealtimeResultat")
+                                                    .find("currentTime");
+
+                            var stops   =   $(resp) .find("nextStopsRealtimeResultat")
+                                                    .find("nextStopsOnLines")
+                                                    .find("nextStopsOnLine")
+                                                    .find("nextStops")
+                                                    .find("nextStop")
+                                                    .map    (   function(idx, element)
+                                                                {
+                                                                    var el = $(element);
+                                                                    var direction   = el.find("directionId").text();
+                                                                    var waiting     = el.find("waitingTimeRaw").text();
+                                                                    var seconds     = el.find("waitingTime").text();
+                                                                    return { direction : direction, time : waiting, seconds : seconds };
+                                                                }
+                                                            )
+                                                    .toArray();
+
+                            data.directions.forEach    (   function(element)
+                                                            {
+                                                                element.next_stops =    stops   .filter (function(s)    { return s.direction == element.id; })
+                                                                                                .sort   (function(a, b) {return a.seconds - b.seconds;})
+                                                                                                .map    (function(s)    { return s.time; });
+                                                            }
+                                                        );
+
+                            app.updateMetroCard(data);
+
+                        }
+                    );
     };
 
     app.updateMetroCard = function(data) {
@@ -200,38 +189,38 @@
         var card = app.visibleCards[data.id];
 
         if (!card) {
-            card = app.cardTemplate.cloneNode(true);
-            card.classList.remove('cardTemplate');
-            card.removeAttribute('hidden');
-            app.container.appendChild(card);
-            app.visibleCards[data.key] = card;
+            card = app.cardTemplate.clone();
+            card.removeClass('cardTemplate');
+            card.removeAttr('hidden');
+            app.container.append(card);
+            app.visibleCards[data.id] = card;
         }
 
-        card.querySelector('.stop-name').textContent = data.stop_name;
-        card.querySelector('.date').textContent = _formatDate(data.update_time);
-        card.querySelector('.line-number').classList.add("icon-"+data.line_number);
+        card.find('.stop-name').text(data.stop_name);
+        card.find('.date').text(_formatDate(data.update_time));
+        card.find('.line-number').addClass("icon-"+data.line_number);
 
-        var directions = card.querySelector(".directions").children;
-        var stops = card.querySelectorAll(".stop");
+        var directions = card.find(".directions").children();
+        var stops = card.find(".stop");
 
         data.directions.forEach (   function(element, index)
                                     {
-                                        directions[index].textContent = element.value;
+                                        directions.eq(index).text(element.value);
                                         if(element.next_stops)
                                         {
-                                            element.next_stops.forEach( function(data, i) { stops[i].children[index].textContent = data; });
+                                            element.next_stops.forEach( function(data, i) { stops.eq(i).children().eq(index).text(data); });
                                         }
                                     }
                                 );
 
 
         if (app.isLoading) {
-            app.spinner.setAttribute('hidden', true);
-            app.container.removeAttribute('hidden');
+            app.spinner.attr('hidden', true);
+            app.container.removeAttr('hidden');
             app.isLoading = false;
         }
     };
 
-    app.bootstrap();
+    app.loadDataForAll();
 
 })();

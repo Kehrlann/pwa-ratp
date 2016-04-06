@@ -50,3 +50,8 @@
     margin: 0 30px;
     width: 100px;
 }
+
+.card .stop
+{
+    width: 50px;
+}
