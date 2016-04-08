@@ -1,10 +1,16 @@
 var dataCacheName = 'ratpData-v1';
-var cacheName = 'ratpPWA-v1';
+var cacheName = 'ratpPWA-v2';
 var filesToCache = [
   '/',
   '/index.html',
-  '/scripts/jquery.js',
-  '/scripts/app.js',
+  '/css/card.css',
+  '/css/flex.css',
+  '/css/globals.css',
+  '/css/images.css',
+  '/css/margin.css',
+  '/css/style.css',
+  '/js/jquery.js',
+  '/js/app.js',
   '/images/1.svg',
   '/images/2.svg',
   '/images/3.svg',
