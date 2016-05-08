@@ -1,0 +1,73 @@
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="ratp-card.html">
+
+<dom-module id="main-app">
+    <template>
+        <style include="iron-flex iron-flex-alignment iron-positioning">
+            :host {
+                font-family: sans-serif;
+            }
+
+            paper-toolbar {
+                font-size: 20px;
+                line-height: 60px;
+                font-weight: 400;
+                padding: 0 10px;
+                color: white;
+                background-color: #129983;
+            }
+
+            .ratp-panel .content {
+                background: #ececec;
+                color: black;
+            }
+        </style>
+
+        <paper-header-panel class="fit ratp-panel">
+            <paper-toolbar>RATP </paper-toolbar>
+            <div class="content fit">
+                <!-- Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ...
+                <br>Content ... -->
+                <ratp-card data="{{fakeCard}}"></ratp-card>
+            </div>
+        </paper-header-panel>
+    </template>
+
+    <script>
+        Polymer({
+            is: "main-app",
+            ready: function(){
+                this.fakeCard =
+                {
+                    id:             "12-208",
+                    stop_id:        208,
+                    line_id:        12,
+                    priority:       0,
+                    stop_name:      "Glacière",
+                    line_number:    "6",
+                    timetable:      [
+                                        {
+                                            direction:  "Saint-Denis-Universite / Asnieres-Gennevilliers Les Courtilles",
+                                            next_stops: ["0 mn", "5mn", "12mn"]
+                                        },
+                                        {
+                                            direction:  "Mairie d'Ivry / Villejuif-Louis Aragon",
+                                            next_stops: ["0 mn", "3mn", "6mn"]
+                                        }
+                                    ],
+                    update_time:    new Date().getTime()
+                }
+            }
+        });
+    </script>
+</dom-module>

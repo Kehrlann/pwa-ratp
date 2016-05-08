@@ -1,0 +1,56 @@
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+
+<dom-module id="ratp-card">
+    <template>
+        <style>
+            :host {
+                font-family: sans-serif;
+            }
+            /* BLAH BLAH */
+        </style>
+
+        <paper-card>
+
+            <div class="flex-row flex-0 flex-row flex-ai-stretch">
+                <div class="line-number flex-0 icon-small"></div>
+                <div class="stop-name flex-1 ellipsis">{{ data.stop_name }}</div>
+                <div class="date flex-1">{{ data.update_time }}</div>
+            </div>
+
+            <div class="flex-row flex-0 mt5">
+                <div class="line-number flex-0 icon"></div>
+                <div class="directions flex-1 flex-column flex-jc-space-around">
+                    <div class="flex-0 ellipsis">{{ getNomDirection(data, 0)}}</div>
+                    <div class="flex-0 ellipsis">[[ getNomDirection(data, 1)]]</div>
+                </div>
+                <div class="stop flex-1 flex-column flex-jc-space-around ">
+                    <div class="flex-0 ellipsis">x</div>
+                    <div class="flex-0 ellipsis">x</div>
+                </div>
+                <div class="stop flex-1 flex-column flex-jc-space-around ">
+                    <div class="flex-0 ellipsis">x</div>
+                    <div class="flex-0 ellipsis">x</div>
+                </div>
+                <div class="stop flex-1 flex-column flex-jc-space-around ">
+                    <div class="flex-0 ellipsis">x</div>
+                    <div class="flex-0 ellipsis">x</div>
+                </div>
+            </div>
+        </paper-card>
+
+        </template>
+
+    <script>
+        Polymer({
+            is: "ratp-card",
+            properties:         {
+                                    data: { type:Object, value:function(){ return {stop_name:"TEST"}}}
+                                },
+            getNomDirection:    function(data, index)
+                                {
+                                    return (data && data[index]) ? data[index] : "x";
+                                },
+            ready: function() { console.log(this);}
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,24 @@
+{
+  "name": "pwa-ratp",
+  "description": "Horaires RATP - Progressive WebApp",
+  "main": "",
+  "authors": [
+    "daniel@garnier.wf"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-swipe": "^1.0.2",
+    "paper-header-panel": "PolymerElements/paper-header-panel#^1.1.5",
+    "paper-card": "PolymerElements/paper-card#^1.1.1"
+  }
+}

@@ -7,3 +7,4 @@ api.json
 # Ignore compiled stuff, logs                   #
 #################################################
 node_modules
+bower_components

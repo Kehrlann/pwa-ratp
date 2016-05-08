@@ -6,10 +6,10 @@ var server  = express();
 var api = JSON.parse(fs.readFileSync('api.json', 'utf8'));
 
 
-server.use(express.static('../site/'));
+server.use(express.static('../polymer/'));
 server.get('/', function(req, res, next) {
     // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('../site/index.html', { root: __dirname });
+    res.sendFile('../polymer/index.html', { root: __dirname });
 });
 server.all('/api', function(req, res) {
     var url = api.baseUri + req.url.replace("/api", "") + "&keyapp=" + api.key;
