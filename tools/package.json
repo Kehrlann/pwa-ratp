@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "description": "Simple proxy to HTTP ...",
     "scripts": {
-        "start": "node server.js"
+        "start": "node server.js",
+        "prestart": "cd ../polymer && bower install"
     },
     "author": "daniel@garnier.wf",
     "dependencies": {
