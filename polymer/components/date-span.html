@@ -1,0 +1,41 @@
+<dom-module id="date-span">
+    <template>
+        <span>{{ formattedDate }}</span>
+    </template>
+    <script>
+        Polymer({
+            is:'date-span',
+            properties:
+            {
+                date:
+                {
+                    type:       String,
+                    value:      new Date().getTime()
+                },
+                formattedDate:
+                {
+                    type:       String,
+                    computed:   "_formatDate(date)"
+                }
+            },
+
+            _padWithZero:   function(input)
+                            {
+                                return input < 10 ? "0" + input : input;
+                            },
+
+            _formatDate:    function(dateAsString)
+                            {
+                                var tempDate    =   dateAsString ? new Date(dateAsString) : new Date();
+                                var day         =   this._padWithZero(tempDate.getDay());
+                                var month       =   this._padWithZero(tempDate.getMonth());
+                                var year        =   tempDate.getFullYear();
+                                var hours       =   this._padWithZero(tempDate.getHours());
+                                var minutes     =   this._padWithZero(tempDate.getMinutes());
+
+                                return day + "-" + month + "-" + year + " " + hours + ":" + minutes;
+                            }
+        });
+
+    </script>
+</dom-module>

@@ -1,6 +1,6 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
-<link rel="import" href="ratp-card.html">
+<link rel="import" href="time-card.html">
 
 <dom-module id="main-app">
     <template>
@@ -18,27 +18,24 @@
                 background-color: #129983;
             }
 
-            .ratp-panel .content {
-                background: #ececec;
-                color: black;
+            .content
+            {
+                padding-top: 10px;
+                padding-bottom: 10px;
             }
         </style>
 
-        <paper-header-panel class="fit ratp-panel">
+        <paper-header-panel class="ratp-panel fit">
             <paper-toolbar>RATP </paper-toolbar>
-            <div class="content fit">
-                <!-- Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ...
-                <br>Content ... -->
-                <ratp-card data="{{fakeCard}}"></ratp-card>
+            <div class="content vertical layout">
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+                <time-card data="{{fakeCard}}"></time-card>
+
             </div>
         </paper-header-panel>
     </template>
@@ -46,6 +43,83 @@
     <script>
         Polymer({
             is: "main-app",
+            getPreferences:     function()
+                                {
+                                    return  [
+                                                {
+                                                    stop_name:      "Glacière",
+                                                    line_number:    "6",
+                                                    id:             "12-208",
+                                                    stop_id:        208,
+                                                    line_id:        12,
+                                                    priority:       0,
+                                                    directions:     [
+                                                                        {
+                                                                            value:  "Charles de Gaulle-Etoile",
+                                                                            id:     23
+                                                                        },
+                                                                        {
+                                                                            value:  "Nation",
+                                                                            id:     24
+                                                                        }
+                                                                    ]
+                                                },
+                                                {
+                                                    stop_name:      "Charles de Gaulle - Étoile",
+                                                    line_number:    "6",
+                                                    id:             "12-19",
+                                                    stop_id:        19,
+                                                    line_id:        12,
+                                                    priority:       1,
+                                                    directions:     [
+                                                                        {
+                                                                            value:  "Charles de Gaulle-Etoile",
+                                                                            id:     23
+                                                                        },
+                                                                        {
+                                                                            value:  "Nation",
+                                                                            id:     24
+                                                                        }
+                                                                    ]
+                                                },
+                                                {
+                                                    stop_name:      "Charles de Gaulle - Étoile",
+                                                    line_number:    "A",
+                                                    id:             "19-19",
+                                                    stop_id:        19,
+                                                    line_id:        19,
+                                                    priority:       2,
+                                                    directions:     [
+                                                                        {
+                                                                            value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
+                                                                            id:     37
+                                                                        },
+                                                                        {
+                                                                            value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
+                                                                            id:     38
+                                                                        }
+                                                                    ]
+                                                },
+                                                {
+                                                    stop_name:      "Nanterre-Préfecture",
+                                                    line_number:    "A",
+                                                    id:             "19-319",
+                                                    stop_id:        319,
+                                                    line_id:        19,
+                                                    priority:       3,
+                                                    directions:     [
+                                                                        {
+                                                                            value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
+                                                                            id:     37
+                                                                        },
+                                                                        {
+                                                                            value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
+                                                                            id:     38
+                                                                        }
+                                                                    ]
+                                                }
+                                            ];
+                                },
             ready: function(){
                 this.fakeCard =
                 {
