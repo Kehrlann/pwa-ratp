@@ -27,22 +27,23 @@
 
         <paper-header-panel class="ratp-panel fit">
             <paper-toolbar>RATP </paper-toolbar>
-            <div class="content vertical layout">
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-                <time-card data="{{fakeCard}}"></time-card>
-
-            </div>
+            <template class="content vertical layout" is="dom-repeat" items="{{preferences}}">
+                <time-card reference-data="{{item}}"></time-card>
+            </template>
         </paper-header-panel>
     </template>
 
     <script>
         Polymer({
             is: "main-app",
+            properties:
+            {
+                preferences:
+                {
+                    type:   Array,
+                    value:  []
+                }
+            },
             getPreferences:     function()
                                 {
                                     return  [
@@ -120,7 +121,9 @@
                                                 }
                                             ];
                                 },
+
             ready: function(){
+                this.preferences = this.getPreferences();
                 this.fakeCard =
                 {
                     id:             "12-208",
