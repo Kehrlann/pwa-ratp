@@ -105,7 +105,14 @@
                 .date {
                     display: none;
                 }
-
+                .directions{
+                    margin-right: 0;
+                    width: 80px;
+                }
+                .stop {
+                    width: 40px;
+                    margin-left: 5px;
+                }
                 .date-small
                 {
                     display: block;
@@ -134,9 +141,9 @@
                 <div class="horizontal layout mb10">
                     <div class$="[[getSmallIcon(referenceData)]]"></div>
                     <div class="stop-name flex-auto ellipsis">[[ referenceData.stop_name ]]</div>
-                    <date-span class="date flex-auto" date="[[ update_time ]]"></date-span>
+                    <date-span class="date flex-auto" date="{{ updateTime }}"></date-span>
                 </div>
-                <date-span class="date-small mb10" date="[[ update_time ]]"></date-span>
+                <date-span class="date-small mb10" date="{{ updateTime }}"></date-span>
                 <div class="horizontal layout">
                     <div class$="[[getIcon(referenceData)]]"></div>
                     <div class="directions flex-auto vertical layout around-justified">
@@ -244,7 +251,6 @@
                                 },
             startRequests:      function(newValue, oldValue)
                                 {
-                                    console.log("START REQUESTS", newValue, oldValue);
                                     this.$.ajax.generateRequest();
                                 },
             getNomDirection:    function(data, index)

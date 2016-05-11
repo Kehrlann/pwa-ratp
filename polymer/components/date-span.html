@@ -18,12 +18,10 @@
                     computed:   "_formatDate(date)"
                 }
             },
-
             _padWithZero:   function(input)
                             {
                                 return input < 10 ? "0" + input : input;
                             },
-
             _formatDate:    function(dateAsString)
                             {
                                 var tempDate    =   dateAsString ? new Date(dateAsString) : new Date();

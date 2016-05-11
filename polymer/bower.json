@@ -22,6 +22,9 @@
     "paper-card": "PolymerElements/paper-card#^1.1.1",
     "iron-swipeable-container": "PolymerElements/iron-swipeable-container#^1.0.2",
     "paper-ripple": "PolymerElements/paper-ripple#^1.0.5",
-    "iron-ajax": "polymerelements/iron-ajax#^1.2.0"
+    "iron-ajax": "polymerelements/iron-ajax#^1.2.0",
+    "paper-icon-button": "polymerelements/paper-icon-button#^1.1.1",
+    "paper-toolbar": "polymerelements/paper-toolbar#^1.1.4",
+    "iron-icons": "PolymerElements/iron-icons#^1.1.3"
   }
 }
