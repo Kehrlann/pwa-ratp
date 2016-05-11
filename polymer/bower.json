@@ -21,6 +21,7 @@
     "paper-header-panel": "PolymerElements/paper-header-panel#^1.1.5",
     "paper-card": "PolymerElements/paper-card#^1.1.1",
     "iron-swipeable-container": "PolymerElements/iron-swipeable-container#^1.0.2",
-    "paper-ripple": "PolymerElements/paper-ripple#^1.0.5"
+    "paper-ripple": "PolymerElements/paper-ripple#^1.0.5",
+    "iron-ajax": "polymerelements/iron-ajax#^1.2.0"
   }
 }

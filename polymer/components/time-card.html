@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="/bower_components/paper-swipe/paper-swipe.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="icon-classes.html">
 <link rel="import" href="date-span.html">
 
@@ -113,6 +114,17 @@
         </style>
 
         <paper-swipe on-tap-underlay="resetAction" on-edge="disableAction" peek-offset="-1000">
+
+
+            <iron-ajax
+                url="/api"
+                params='{{computeHttpOptions(referenceData)}}'
+                handle-as="xml"
+                last-response="{{horaires}}"
+                id="ajax"
+            >
+            </iron-ajax>
+
             <div underlay class="underlay">
                 <paper-ripple></paper-ripple>
                 Under-hello !
@@ -132,16 +144,16 @@
                         <div class="ellipsis">[[ getNomDirection(referenceData, 1)]]</div>
                     </div>
                     <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(referenceData, 0, 0) ]]</div>
-                        <div class="ellipsis">[[ getTemps(referenceData, 1, 0) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesAller,  0) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesRetour, 0) ]]</div>
                     </div>
                     <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(referenceData, 0, 1) ]]</div>
-                        <div class="ellipsis">[[ getTemps(referenceData, 1, 1) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesAller,  1) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesRetour, 1) ]]</div>
                     </div>
                     <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(referenceData, 0, 2) ]]</div>
-                        <div class="ellipsis">[[ getTemps(referenceData, 1, 2) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesAller,  2) ]]</div>
+                        <div class="ellipsis">[[ getTemps(horairesRetour, 2) ]]</div>
                     </div>
                 </div>
             </paper-card>
@@ -163,36 +175,101 @@
                                     },
                                     updateTime:
                                     {
-                                        type:   String,
-                                        value:  new Date().getTime()
+                                        type:       String,
+                                        value:      new Date().getTime(),
+                                        observer:   'startRequests'
+                                    },
+                                    horaires:       String,
+                                    horairesAller:
+                                    {
+                                        type:       Array,
+                                        computed:   "deserializeXML(referenceData, horaires, 0)"
+                                    },
+                                    horairesRetour:
+                                    {
+                                        type:       Array,
+                                        computed:   "deserializeXML(referenceData, horaires, 1)"
                                     }
                                 },
-            getNomDirection:    function(d, index)
+            computeHttpOptions: function(data)
                                 {
-                                    if  (   this.referenceData
-                                        &&  this.referenceData.directions
-                                        &&  this.referenceData.directions[index]
-                                        &&  this.referenceData.directions[index].value
+                                    if  (   data
+                                        &&  data.line_id
+                                        &&  data.stop_id
                                         )
                                     {
-                                        return this.referenceData.directions[index].value;
+                                        return  {   cmd:        "getNextStopsRealtime",
+                                                    stopArea:   this.referenceData.stop_id,
+                                                    line:       this.referenceData.line_id
+                                                };
+                                    }
+                                    else
+                                    {
+                                        return null;
+                                    }
+                                },
+            deserializeXML:     function(data, xml, index)
+                                {
+                                    if  (   data
+                                        &&  data.directions
+                                        &&  data.directions[index]
+                                        &&  data.directions[index].id
+                                        &&  xml
+                                        )
+                                    {
+                                                            // Transforme la HTMLCollection en Array
+                                        return  [].slice    .call   (   xml.getElementsByTagName("nextStop")
+                                                                    )
+                                                            // Ne garder que le noeuds qui correspondent à la bonne direction
+                                                            .filter (   function(el)
+                                                                        {
+                                                                            return el.getElementsByTagName("directionId")[0].textContent == data.directions[index].id;
+                                                                        }
+                                                                    )
+                                                            //  Sélectionner le texte à afficher, et les temps d'attente en seconds
+                                                            .map    (   function(el)
+                                                                        {
+                                                                            var waiting     = el.getElementsByTagName("waitingTimeRaw")[0].textContent;
+                                                                            var seconds     = el.getElementsByTagName("waitingTime")[0].textContent;
+                                                                            return { time : waiting, seconds : seconds };
+                                                                        }
+                                                                    )
+                                                            //  Trier par temps en secondes
+                                                            .sort   (   function(a, b)
+                                                                        {
+                                                                            return a.seconds - b.seconds;
+                                                                        }
+                                                                    );
+                                    }
+                                },
+            startRequests:      function(newValue, oldValue)
+                                {
+                                    console.log("START REQUESTS", newValue, oldValue);
+                                    this.$.ajax.generateRequest();
+                                },
+            getNomDirection:    function(data, index)
+                                {
+                                    if  (   data
+                                        &&  data.directions
+                                        &&  data.directions[index]
+                                        &&  data.directions[index].value
+                                        )
+                                    {
+                                        return data.directions[index].value;
                                     }
                                     else
                                     {
                                         return "x";
                                     }
-
                                 },
-            getTemps:           function(data, row, col)
+            getTemps:           function(data, idx)
                                 {
                                     if  (   data
-                                        &&  data.timetable
-                                        &&  data.timetable[row]
-                                        &&  data.timetable[row].next_stops
-                                        &&  data.timetable[row].next_stops[col]
+                                        &&  data[idx]
+                                        &&  data[idx].time
                                         )
                                     {
-                                        return data.timetable[row].next_stops[col];
+                                        return data[idx].time;
                                     }
                                     else
                                     {
