@@ -112,7 +112,7 @@
             }
         </style>
 
-        <paper-swipe on-tap-underlay="resetAction" on-edge="resetAction" peek-offset="-1000">
+        <paper-swipe on-tap-underlay="resetAction" on-edge="disableAction" peek-offset="-1000">
             <div underlay class="underlay">
                 <paper-ripple></paper-ripple>
                 Under-hello !
@@ -167,15 +167,15 @@
                                         value:  new Date().getTime()
                                     }
                                 },
-            getNomDirection:    function(data, index)
+            getNomDirection:    function(d, index)
                                 {
-                                    if  (   data
-                                        &&  data.directions
-                                        &&  data.directions[index]
-                                        &&  data.directions[index].value
+                                    if  (   this.referenceData
+                                        &&  this.referenceData.directions
+                                        &&  this.referenceData.directions[index]
+                                        &&  this.referenceData.directions[index].value
                                         )
                                     {
-                                        return data.directions[index].value;
+                                        return this.referenceData.directions[index].value;
                                     }
                                     else
                                     {
@@ -201,13 +201,13 @@
                                 },
             getIcon:            function(data)
                                 {
-                                    var base_classes = "line-number icon " ;
+                                    var base_classes = "line-number icon flex-none " ;
                                     var icon = (data && data.line_number) ? "icon-" + data.line_number : "";
                                     return base_classes + icon;
                                 },
             getSmallIcon:       function(data)
                                 {
-                                    var base_classes = "line-number icon-small " ;
+                                    var base_classes = "line-number icon-small flex-none " ;
                                     var icon = (data && data.line_number) ? "icon-" + data.line_number : "";
                                     return base_classes + icon;
                                 },
