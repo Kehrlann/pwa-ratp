@@ -1,8 +1,12 @@
-<link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
 <link rel="import" href="/bower_components/paper-swipe/paper-swipe.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+
 <link rel="import" href="icon-classes.html">
 <link rel="import" href="date-span.html">
 
@@ -90,9 +94,24 @@
                 margin-bottom: 10px;
             }
 
-            .underlay
+            .underlay .delete
             {
-                background-color:cyan;
+                position:relative;
+                background-color:var(--paper-red-900);
+                color:white;
+            }
+
+            .underlay .cancel
+            {
+                position:relative;
+                background-color:var(--paper-grey-400);
+                color:black;
+            }
+
+            .underlay > .cancel > .text,
+            .underlay > .delete > .text
+            {
+                font-weight:700;
             }
 
             @media(max-width: 767px) {
@@ -120,9 +139,10 @@
             }
         </style>
 
-        <paper-swipe on-tap-underlay="resetAction" on-edge="disableAction" peek-offset="-1000">
-
-
+        <paper-swipe    on-edge="disableAction"
+                        peek-offset="-1000"
+                        slide-offset="30"
+        >
             <iron-ajax
                 url="/api"
                 params='{{computeHttpOptions(referenceData)}}'
@@ -132,11 +152,20 @@
             >
             </iron-ajax>
 
-            <div underlay class="underlay">
-                <paper-ripple></paper-ripple>
-                Under-hello !
+            <div underlay class="underlay horizontal layout">
+                <div class="delete flex horizontal layout center center-justified">
+                    <paper-ripple></paper-ripple>
+                    <iron-icon icon="delete"></iron-icon>
+                    <div class="text flex-none">SUPPRIMER</div>
+                </div>
+                <div class="cancel flex horizontal layout center center-justified" on-tap="resetAction">
+                    <paper-ripple></paper-ripple>
+                    <iron-icon icon="undo"></iron-icon>
+                    <div class="text flex-none">ANNULER</div>
+                </div>
             </div>
-            <paper-card content>
+
+            <paper-card content id="content">
                 <paper-ripple></paper-ripple>
                 <div class="horizontal layout mb10">
                     <div class$="[[getSmallIcon(referenceData)]]"></div>
@@ -305,6 +334,7 @@
                                     }
                                     target.removeAttribute('disable-swipe');
                                     target.resetPosition();
+                                    ev.preventDefault();
                                 },
             disableAction:      function(ev)
                                 {
@@ -314,7 +344,6 @@
                                     }
                                     target.setAttribute('disable-swipe', true);
                                 }
-
         });
     </script>
 </dom-module>
