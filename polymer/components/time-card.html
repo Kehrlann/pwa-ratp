@@ -23,6 +23,7 @@
             paper-card {
                 padding: 16px;
                 color: #444;
+                border-radius: 0;
                 @apply(--layout-flex);
             }
 
@@ -141,7 +142,8 @@
 
         <paper-swipe    on-edge="disableAction"
                         peek-offset="-1000"
-                        slide-offset="30"
+                        slide-offset="50"
+                        id="swipe"
         >
             <iron-ajax
                 url="/api"
@@ -153,7 +155,7 @@
             </iron-ajax>
 
             <div underlay class="underlay horizontal layout">
-                <div class="delete flex horizontal layout center center-justified">
+                <div class="delete flex horizontal layout center center-justified" on-tap="deleteCard">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="delete"></iron-icon>
                     <div class="text flex-none">SUPPRIMER</div>
@@ -334,7 +336,6 @@
                                     }
                                     target.removeAttribute('disable-swipe');
                                     target.resetPosition();
-                                    ev.preventDefault();
                                 },
             disableAction:      function(ev)
                                 {
@@ -343,6 +344,14 @@
                                         target = target.parentElement;
                                     }
                                     target.setAttribute('disable-swipe', true);
+                                },
+            deleteCard:         function(ev)
+                                {
+                                    this.fire('delete-card', { id: this.referenceData.id })
+                                    // this.resetAction(ev);
+                                    // this.async  (   this.fire('delete-card', { id: this.referenceData.id }),
+                                    //                 500
+                                    //             );
                                 }
         });
     </script>

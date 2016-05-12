@@ -29,15 +29,24 @@
             }
         </style>
 
-        <paper-header-panel class="ratp-panel fit">
+        <paper-header-panel class="ratp-panel fit" id="panel">
+
+            <!-- Toolbar -->
             <paper-toolbar>
                 <paper-icon-button icon="menu"></paper-icon-button>
                 <span class="title">RATP</span>
                 <paper-icon-button icon="add">+</paper-icon-button>
                 <paper-icon-button icon="refresh" on-tap="refresh"></paper-icon-button>
             </paper-toolbar>
+
+            <!-- Cards -->
             <template class="content vertical layout" is="dom-repeat" items="{{preferences}}">
-                <time-card reference-data="{{item}}" update-time="{{updateTime}}"></time-card>
+
+                <time-card  reference-data="{{item}}"
+                            update-time="{{updateTime}}"
+                            on-delete-card="deleteCard"
+                >
+                </time-card>
             </template>
         </paper-header-panel>
     </template>
@@ -135,10 +144,22 @@
                                                 }
                                             ];
                                 },
+            deleteFromPrefs:    function(id)
+                                {
+                                    var index = this.preferences.map(function(el){ return el.id; }).indexOf(id);
+                                    this.splice("preferences", index, 1);
+                                },
             refresh:            function()
                                 {
                                     this.updateTime = new Date().getTime();
                                     console.log(this.updateTime);
+                                },
+            deleteCard:         function(evt, opt)
+                                {
+                                    if  (opt && opt.id)
+                                    {
+                                        this.deleteFromPrefs(opt.id);
+                                    }
                                 },
             ready:              function()
                                 {
