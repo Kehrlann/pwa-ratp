@@ -3,7 +3,15 @@
 
 <link rel="import" href="/bower_components/paper-header-panel/paper-header-panel.html">
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="/bower_components/platinum-sw/platinum-sw-register.html">
+<link rel="import" href="/bower_components/platinum-sw/platinum-sw-cache.html">
+<link rel="import" href="/bower_components/platinum-sw/platinum-sw-fetch.html">
+<link rel="import" href="/bower_components/platinum-sw/platinum-sw-import-script.html">
+
 <link rel="import" href="time-card.html">
 
 <dom-module id="main-app">
@@ -28,6 +36,32 @@
                 padding-bottom: 10px;
             }
         </style>
+
+
+        <paper-toast    id="caching"
+                        duration="5000"
+                        text="Données mises en cache ! L'app fonctionnera hors ligne.">
+        </paper-toast>
+
+        <platinum-sw-register   auto-register
+                                clients-claim
+                                skip-waiting
+                                on-service-worker-installed="displayToast"
+        >
+
+            <platinum-sw-import-script href="/custom-fetch-handler.js"></platinum-sw-import-script>
+
+            <platinum-sw-fetch  handler="timetableFetchHandler"
+                                path="/api(.*)"
+            >
+            </platinum-sw-fetch>
+
+            <platinum-sw-cache  default-cache-strategy="fastest"
+                                cache-config-file="/cache-config.json"
+            >
+            </platinum-sw-cache>
+
+        </platinum-sw-register>
 
         <paper-header-panel class="ratp-panel fit" id="panel">
 
@@ -164,6 +198,10 @@
             ready:              function()
                                 {
                                     this.preferences = this.getPreferences();
+                                },
+            displayToast:       function()
+                                {
+                                    this.$.caching.show();
                                 }
         });
     </script>

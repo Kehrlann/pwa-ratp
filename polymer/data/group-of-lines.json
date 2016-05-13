@@ -1,0 +1,8 @@
+[
+    {   "id" : 1,   "value" : { "label" : "Métro",  "active" : true   }  },
+    {   "id" : 2,   "value" : { "label" : "RER",    "active" : false  }  },
+    {   "id" : 3,   "value" : { "label" : "SNCF",   "active" : false  }  },
+    {   "id" : 4,   "value" : { "label" : "Tram",   "active" : false  }  },
+    {   "id" : 5,   "value" : { "label" : "Bus",    "active" : false  }  },
+    {   "id" : 6,   "value" : { "label" : "Noct.",  "active" : false  }  }
+]
