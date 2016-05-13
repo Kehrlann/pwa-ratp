@@ -7,6 +7,7 @@
 
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 
+<link rel="import" href="/bower_components/platinum-https-redirect/platinum-https-redirect.html">
 <link rel="import" href="/bower_components/platinum-sw/platinum-sw-register.html">
 <link rel="import" href="/bower_components/platinum-sw/platinum-sw-cache.html">
 <link rel="import" href="/bower_components/platinum-sw/platinum-sw-fetch.html">
@@ -42,10 +43,11 @@
                         duration="5000"
                         text="Données mises en cache ! L'app fonctionnera hors ligne.">
         </paper-toast>
-
+        <platinum-https-redirect></platinum-https-redirect>
         <platinum-sw-register   auto-register
                                 clients-claim
                                 skip-waiting
+                                href="/sw-import.js"
                                 on-service-worker-installed="displayToast"
         >
 
@@ -199,7 +201,7 @@
                                 {
                                     this.preferences = this.getPreferences();
                                 },
-            displayToast:       function()
+            displayToast:       function(evt)
                                 {
                                     this.$.caching.show();
                                 }

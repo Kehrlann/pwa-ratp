@@ -5,7 +5,6 @@
     "precache":             [
                                 "/",
                                 "/index.html",
-                                "/index.html?homescreen=1",
                                 "/images/1.svg",
                                 "/images/2.svg",
                                 "/images/3.svg",
@@ -27,9 +26,7 @@
                                 "/images/ic_refresh_white_24px.svg",
                                 "/images/RATP.svg",
                                 "/data/line.json",
-                                "/data/stops.json",
-                                "/custom-fetch-handler.js",
-                                "/sw-import.js"
+                                "/data/stops.json"
                             ],
-    "precacheFingerprint":  "3a562b2bad3f121227897ef134873c42zxx"
+    "precacheFingerprint":  "2"
 }
