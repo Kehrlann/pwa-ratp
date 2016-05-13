@@ -115,6 +115,14 @@
                 font-weight:700;
             }
 
+            #swipe.swipeout {
+                transition: -webkit-transform cubic-bezier(.55,0,.1,1) 0.3s;
+                transition: -moz-transform cubic-bezier(.55,0,.1,1) 0.3s;
+                transition: -mx-transform cubic-bezier(.55,0,.1,1) 0.3s;
+                transition: -o-transform cubic-bezier(.55,0,.1,1) 0.3s;
+                transition: transform cubic-bezier(.55,0,.1,1) 0.3s;
+            }
+
             @media(max-width: 767px) {
                 .icon-small {
                     display: block;
@@ -347,11 +355,20 @@
                                 },
             deleteCard:         function(ev)
                                 {
-                                    this.fire('delete-card', { id: this.referenceData.id })
-                                    // this.resetAction(ev);
-                                    // this.async  (   this.fire('delete-card', { id: this.referenceData.id }),
-                                    //                 500
-                                    //             );
+                                    // Transformer l'élément en le "poussant" en dehors de l'écran,
+                                    // avant de fire un événement de suppression.
+                                    // Pour que ça soit propre, on applique la _même_ transformation
+                                    // que celle subie par la paper-card "content"
+                                    //  ->  Comme ça, la transformation, est dans le même sens que
+                                    //      le slide de la carte. Si on a slidé à droite, on décale
+                                    //      l'élement à droite, si on a slidé à gauche, on décale
+                                    //      l'élément ... à gauche, ouioui :)
+                                    var cardTransform = this.$.content.style.transform;
+                                    this.$.swipe.toggleClass("swipeout", true);
+                                    this.$.swipe.transform(cardTransform);
+                                    this.async  (   function(){this.fire('delete-card', { id: this.referenceData.id })},
+                                                    200
+                                                );
                                 }
         });
     </script>
