@@ -1,0 +1,89 @@
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="add-card-dialog">
+    <template>
+        <style>
+            /* Coucou !*/
+        </style>
+
+        <paper-dialog id="addDialog">
+            <h2>Ajouter un favori</h2>
+            <paper-dialog-scrollable>
+                <template is="dom-repeat" items="{{lines}}">
+                    <div>
+                        {{ item.name }}
+                    </div>
+                    <hr>
+                </template>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Retour</paper-button>
+                <paper-button dialog-confirm>Accept</paper-button>
+            </div>
+        </paper-dialog>
+
+        <iron-ajax
+            auto
+            id="ajax"
+            url="/data/line.json"
+            handle-as="json"
+            last-response="{{data}}"
+        >
+        </iron-ajax>
+
+
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "add-card-dialog",
+            properties:
+            {
+                data:           {
+                                    type:       Array,
+                                    value:      null
+                                },
+                lines:          {
+                                    type:       Array,
+                                    value:      [],
+                                    computed:   'computeLines(data)'
+                                },
+                selectedLine:   {
+                                    type:   Object,
+                                    value:  null
+                                }
+            },
+            open:           function(evt)
+                            {
+                                this.$.addDialog.open();
+                            },
+            computeLines:   function(data)
+                            {
+                                if  (   data)
+                                {
+                                    return data.map (
+                                                        function(element)
+                                                        {
+                                                            return  {
+                                                                        id:         element.id,
+                                                                        code:       element.value.code,
+                                                                        name:       element.value.name,
+                                                                        directions: element.value.direction
+                                                                    }
+                                                        }
+                                                    )
+                                }
+                                else
+                                {
+                                    return null;
+                                }
+                            }
+
+        });
+    </script>
+</dom-module>
