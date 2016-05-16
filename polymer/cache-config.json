@@ -1,6 +1,6 @@
 {
     "cacheId":              "pwa-ratp",
-    "defaultCacheStrategy": "fastest",
+    "defaultCacheStrategy": "networkFirst",
     "disabled":             false,
     "precache":             [
                                 "/",
@@ -28,5 +28,5 @@
                                 "/data/line.json",
                                 "/data/stops.json"
                             ],
-    "precacheFingerprint":  "3"
+    "precacheFingerprint":  "4"
 }
