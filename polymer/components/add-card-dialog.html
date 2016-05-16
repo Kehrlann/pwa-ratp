@@ -13,6 +13,12 @@
 <dom-module id="add-card-dialog">
     <template>
         <style include="iron-flex iron-flex-alignment iron-positioning icon-classes">
+
+            #addDialog
+            {
+                min-width: 250px;
+            }
+
             .icon
             {
                 background-repeat: no-repeat;
@@ -37,20 +43,38 @@
 
         </style>
 
-        <paper-dialog id="addDialog">
+        <paper-dialog id="addDialog" with-backdrop="true">
             <h2>Ajouter un favori</h2>
+
             <paper-dialog-scrollable>
-                <template is="dom-repeat" items="{{lines}}">
-                    <div class="horizontal center layout line">
-                        <paper-ripple></paper-ripple>
-                        <div class$="[[getIcon(item)]]"></div>
-                        <div class="flex ellipsis">{{ item.name }}</div>
-                    </div>
+
+                <template is="dom-if" if="{{!selectedLine}}">
+                    <template is="dom-repeat" items="{{lines}}">
+                        <div class="horizontal center layout line" on-tap="selectLine" line-id="[[item.id]]">
+                            <paper-ripple></paper-ripple>
+                            <div class$="[[getIcon(item)]]"></div>
+                            <div class="flex ellipsis">{{ item.name }}</div>
+                        </div>
+                    </template>
                 </template>
+
+                <template is="dom-if" if="{{selectedLine}}">
+                    <template is="dom-repeat" items="{{stops}}">
+                        <div class="line">
+                            <paper-ripple></paper-ripple>
+                            <div class="ellipsis">{{ item.value }}</div>
+                        </div>
+                    </template>
+                </template>
+
+
             </paper-dialog-scrollable>
+
             <div class="buttons">
-                <paper-button dialog-dismiss>Retour</paper-button>
-                <paper-button dialog-confirm>Accept</paper-button>
+                <template is="dom-if" if="{{selectedLine}}">
+                    <paper-button on-tap="retourLignes">Retour</paper-button>
+                </template>
+                <paper-button dialog-dismiss>Annuler</paper-button>
             </div>
         </paper-dialog>
 
@@ -82,8 +106,13 @@
                                     computed:   'computeLines(data)'
                                 },
                 selectedLine:   {
-                                    type:   Object,
-                                    value:  null
+                                    type:       Object,
+                                    value:      null
+                                },
+                stops:          {
+                                    type:       Array,
+                                    value:      [],
+                                    computed:   'computeStops(data, selectedLine)'
                                 }
             },
             open:           function(evt)
@@ -105,11 +134,38 @@
                                                                         directions: element.value.direction
                                                                     }
                                                         }
-                                                    )
+                                                    );
                                 }
                                 else
                                 {
                                     return null;
+                                }
+                            },
+            computeStops:   function(data, selectedLine)
+                            {
+                                if  (data && selectedLine && selectedLine.id)
+                                {
+                                    var ret = null;
+                                    data.some   (   function(e)
+                                                    {
+                                                        if (e.id == selectedLine.id)
+                                                        {
+                                                            ret =   e.value.stops   .sort   (   function(a, b)
+                                                                                                {
+                                                                                                    if(a.value < b.value) return -1;
+                                                                                                    if(a.value > b.value) return 1;
+                                                                                                    return 0;
+                                                                                                }
+                                                                                            );
+                                                            return true;
+                                                        }
+                                                    }
+                                                );
+                                    return ret;
+                                }
+                                else
+                                {
+                                    return [];
                                 }
                             },
             getIcon:        function(data)
@@ -118,7 +174,32 @@
                                 var icon = (data && data.code) ? "icon-" + data.code : "";
                                 return base_classes + icon;
                             },
+            selectLine:     function(evt)
+                            {
+                                var target = evt.target;
+                                while(!target.lineId)
+                                {
+                                    target = target.parentElement;
+                                }
 
+                                var line = null;
+                                this.data   .some   (   function(d)
+                                                        {
+                                                            if(d.id == target.lineId)
+                                                            {
+                                                                line = d;
+                                                                return true;
+                                                            }
+                                                        }
+                                                    );
+                                this.selectedLine = line;
+                                this.$.addDialog.notifyResize();
+                            },
+            retourLignes:   function(evt)
+                            {
+                                this.selectedLine = null;
+                                this.$.addDialog.notifyResize();
+                            }
 
         });
     </script>
