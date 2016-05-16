@@ -46,7 +46,7 @@
                         duration="5000"
                         text="Données mises en cache ! L'app fonctionnera hors ligne.">
         </paper-toast>
-        
+
         <!-- <platinum-https-redirect></platinum-https-redirect> -->
 
         <platinum-sw-register   auto-register
@@ -81,7 +81,11 @@
             </paper-toolbar>
 
             <!-- Cards -->
-            <template class="content vertical layout" is="dom-repeat" items="{{preferences}}">
+            <template   class="content vertical layout"
+                        is="dom-repeat"
+                        items="{{preferences}}"
+                        sort="sortPreferences"
+            >
 
                 <time-card  reference-data="{{item}}"
                             update-time="{{updateTime}}"
@@ -91,7 +95,10 @@
             </template>
         </paper-header-panel>
 
-        <add-card-dialog id="addDialog"></add-card-dialog>
+        <add-card-dialog    id="addDialog"
+                            on-stop-selected="addCard"
+        >
+        </add-card-dialog>
 
     </template>
 
@@ -109,93 +116,184 @@
                 {
                     type:       String,
                     value:      new Date().getTime()
+                },
+                userHasInteracted:
+                {
+                    type:       Boolean,
+                    value:      JSON.parse(localStorage.getItem("userHasInteracted"))
                 }
             },
             getPreferences:     function()
                                 {
-                                    return  [
-                                                {
-                                                    stop_name:      "Glacière",
-                                                    line_number:    "6",
-                                                    id:             "12-208",
-                                                    stop_id:        208,
-                                                    line_id:        12,
-                                                    priority:       0,
-                                                    directions:     [
-                                                                        {
-                                                                            value:  "Charles de Gaulle-Etoile",
-                                                                            id:     23
-                                                                        },
-                                                                        {
-                                                                            value:  "Nation",
-                                                                            id:     24
-                                                                        }
-                                                                    ]
-                                                },
-                                                {
-                                                    stop_name:      "Charles de Gaulle - Étoile",
-                                                    line_number:    "6",
-                                                    id:             "12-19",
-                                                    stop_id:        19,
-                                                    line_id:        12,
-                                                    priority:       1,
-                                                    directions:     [
-                                                                        {
-                                                                            value:  "Charles de Gaulle-Etoile",
-                                                                            id:     23
-                                                                        },
-                                                                        {
-                                                                            value:  "Nation",
-                                                                            id:     24
-                                                                        }
-                                                                    ]
-                                                },
-                                                {
-                                                    stop_name:      "Charles de Gaulle - Étoile",
-                                                    line_number:    "A",
-                                                    id:             "19-19",
-                                                    stop_id:        19,
-                                                    line_id:        19,
-                                                    priority:       2,
-                                                    directions:     [
-                                                                        {
-                                                                            value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
-                                                                            id:     37
-                                                                        },
-                                                                        {
-                                                                            value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
-                                                                            id:     38
-                                                                        }
-                                                                    ]
-                                                },
-                                                {
-                                                    stop_name:      "Nanterre-Préfecture",
-                                                    line_number:    "A",
-                                                    id:             "19-319",
-                                                    stop_id:        319,
-                                                    line_id:        19,
-                                                    priority:       3,
-                                                    directions:     [
-                                                                        {
-                                                                            value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
-                                                                            id:     37
-                                                                        },
-                                                                        {
-                                                                            value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
-                                                                            id:     38
-                                                                        }
-                                                                    ]
-                                                }
-                                            ];
+                                    if(this.userHasInteracted)
+                                    {
+                                        return JSON.parse(localStorage.getItem("preferences"));
+                                    }
+                                    else
+                                    {
+                                        return  [
+                                                    {
+                                                        stop_name:      "Glacière",
+                                                        line_number:    "6",
+                                                        id:             "12-208",
+                                                        stop_id:        208,
+                                                        line_id:        12,
+                                                        line_priorite:  7,
+                                                        directions:     [
+                                                                            {
+                                                                                value:  "Charles de Gaulle-Etoile",
+                                                                                id:     23
+                                                                            },
+                                                                            {
+                                                                                value:  "Nation",
+                                                                                id:     24
+                                                                            }
+                                                                        ]
+                                                    },
+                                                    {
+                                                        stop_name:      "Charles de Gaulle - Étoile",
+                                                        line_number:    "A",
+                                                        id:             "19-19",
+                                                        stop_id:        19,
+                                                        line_id:        19,
+                                                        line_priorite:  17,
+                                                        directions:     [
+                                                                            {
+                                                                                value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
+                                                                                id:     37
+                                                                            },
+                                                                            {
+                                                                                value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
+                                                                                id:     38
+                                                                            }
+                                                                        ]
+                                                    }
+                                                ];
+                                    }
+
+                                    // return  [
+                                    //             {
+                                    //                 stop_name:      "Glacière",
+                                    //                 line_number:    "6",
+                                    //                 id:             "12-208",
+                                    //                 stop_id:        208,
+                                    //                 line_id:        12,
+                                    //                 priority:       0,
+                                    //                 directions:     [
+                                    //                                     {
+                                    //                                         value:  "Charles de Gaulle-Etoile",
+                                    //                                         id:     23
+                                    //                                     },
+                                    //                                     {
+                                    //                                         value:  "Nation",
+                                    //                                         id:     24
+                                    //                                     }
+                                    //                                 ]
+                                    //             },
+                                    //             {
+                                    //                 stop_name:      "Charles de Gaulle - Étoile",
+                                    //                 line_number:    "6",
+                                    //                 id:             "12-19",
+                                    //                 stop_id:        19,
+                                    //                 line_id:        12,
+                                    //                 priority:       1,
+                                    //                 directions:     [
+                                    //                                     {
+                                    //                                         value:  "Charles de Gaulle-Etoile",
+                                    //                                         id:     23
+                                    //                                     },
+                                    //                                     {
+                                    //                                         value:  "Nation",
+                                    //                                         id:     24
+                                    //                                     }
+                                    //                                 ]
+                                    //             },
+                                    //             {
+                                    //                 stop_name:      "Charles de Gaulle - Étoile",
+                                    //                 line_number:    "A",
+                                    //                 id:             "19-19",
+                                    //                 stop_id:        19,
+                                    //                 line_id:        19,
+                                    //                 priority:       2,
+                                    //                 directions:     [
+                                    //                                     {
+                                    //                                         value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
+                                    //                                         id:     37
+                                    //                                     },
+                                    //                                     {
+                                    //                                         value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
+                                    //                                         id:     38
+                                    //                                     }
+                                    //                                 ]
+                                    //             },
+                                    //             {
+                                    //                 stop_name:      "Nanterre-Préfecture",
+                                    //                 line_number:    "A",
+                                    //                 id:             "19-319",
+                                    //                 stop_id:        319,
+                                    //                 line_id:        19,
+                                    //                 priority:       3,
+                                    //                 directions:     [
+                                    //                                     {
+                                    //                                         value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
+                                    //                                         id:     37
+                                    //                                     },
+                                    //                                     {
+                                    //                                         value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
+                                    //                                         id:     38
+                                    //                                     }
+                                    //                                 ]
+                                    //             }
+                                    //         ];
                                 },
             deleteFromPrefs:    function(id)
                                 {
                                     var index = this.preferences.map(function(el){ return el.id; }).indexOf(id);
+
+                                    var toPush = this.preferences.slice();
+                                    toPush.splice(index, 1);
+                                    localStorage.setItem("preferences", JSON.stringify(toPush));
+
                                     this.splice("preferences", index, 1);
+                                },
+            addToPrefs:         function(stop)
+                                {
+                                    if  (stop && stop.id)
+                                    {
+                                        var exists = this.preferences.some(function(p) { return p.id == stop.id; });
+                                        if (!exists)
+                                        {
+                                            var toPush = this.preferences.slice();
+                                            toPush.push(stop);
+                                            localStorage.setItem("preferences", JSON.stringify(toPush));
+                                            this.interact();
+
+                                            this.push("preferences", stop);
+                                        }
+                                    }
+                                },
+            interact:           function()
+                                {
+                                    localStorage.setItem("userHasInteracted", "true");
                                 },
             refresh:            function()
                                 {
                                     this.updateTime = new Date().getTime();
+                                },
+            sortPreferences:    function(a, b)
+                                {
+                                    if (a.line_priorite > b.line_priorite) return 1;
+                                    if (a.line_priorite < b.line_priorite) return -1;
+                                    if (a.stop_name > b.stop_name) return 1;
+                                    if (a.stop_name < b.stop_name) return -1;
+                                    return 0;
+                                },
+            addCard:            function(evt, opt)
+                                {
+                                    if (opt && opt.stop)
+                                    {
+                                        this.addToPrefs(opt.stop);
+                                    }
                                 },
             deleteCard:         function(evt, opt)
                                 {

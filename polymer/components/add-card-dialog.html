@@ -36,9 +36,8 @@
 
             .line
             {
-                position: relative;
-                padding:    10px 0;
-                border-bottom: 1px solid #999;
+                padding:        10px 0;
+                border-bottom:  1px solid #999;
             }
 
         </style>
@@ -50,9 +49,8 @@
 
                 <template is="dom-if" if="{{!selectedLine}}">
                     <template is="dom-repeat" items="{{lines}}">
-                        <div class="horizontal center layout line" on-tap="selectLine" line-id="[[item.id]]">
-                            <paper-ripple></paper-ripple>
-                            <div class$="[[getIcon(item)]]"></div>
+                        <div class="horizontal center layout line" on-tap="_selectLine" line-id="[[item.id]]">
+                            <div class$="[[_getIcon(item)]]"></div>
                             <div class="flex ellipsis">{{ item.name }}</div>
                         </div>
                     </template>
@@ -60,8 +58,7 @@
 
                 <template is="dom-if" if="{{selectedLine}}">
                     <template is="dom-repeat" items="{{stops}}">
-                        <div class="line">
-                            <paper-ripple></paper-ripple>
+                        <div class="line" on-tap="_selectStop" stop-id="[[item.id]]">
                             <div class="ellipsis">{{ item.value }}</div>
                         </div>
                     </template>
@@ -72,7 +69,7 @@
 
             <div class="buttons">
                 <template is="dom-if" if="{{selectedLine}}">
-                    <paper-button on-tap="retourLignes">Retour</paper-button>
+                    <paper-button on-tap="_retourLignes">Retour</paper-button>
                 </template>
                 <paper-button dialog-dismiss>Annuler</paper-button>
             </div>
@@ -103,7 +100,7 @@
                 lines:          {
                                     type:       Array,
                                     value:      [],
-                                    computed:   'computeLines(data)'
+                                    computed:   '_computeLines(data)'
                                 },
                 selectedLine:   {
                                     type:       Object,
@@ -112,14 +109,23 @@
                 stops:          {
                                     type:       Array,
                                     value:      [],
-                                    computed:   'computeStops(data, selectedLine)'
+                                    computed:   '_computeStops(data, selectedLine)'
                                 }
             },
             open:           function(evt)
                             {
                                 this.$.addDialog.open();
                             },
-            computeLines:   function(data)
+            resetState:     function(evt)
+                            {
+                                this.selectedLine = null;
+                            },
+            close:          function(evt)
+                            {
+                                this.resetState();
+                                this.$.addDialog.close();
+                            },
+            _computeLines:  function(data)
                             {
                                 if  (   data)
                                 {
@@ -131,7 +137,8 @@
                                                                         id:         element.id,
                                                                         code:       element.value.code,
                                                                         name:       element.value.name,
-                                                                        directions: element.value.direction
+                                                                        directions: element.value.direction,
+                                                                        priorite:   element.priorite
                                                                     }
                                                         }
                                                     );
@@ -141,7 +148,7 @@
                                     return null;
                                 }
                             },
-            computeStops:   function(data, selectedLine)
+            _computeStops:  function(data, selectedLine)
                             {
                                 if  (data && selectedLine && selectedLine.id)
                                 {
@@ -168,13 +175,13 @@
                                     return [];
                                 }
                             },
-            getIcon:        function(data)
+            _getIcon:       function(data)
                             {
                                 var base_classes = "icon flex-none " ;
                                 var icon = (data && data.code) ? "icon-" + data.code : "";
                                 return base_classes + icon;
                             },
-            selectLine:     function(evt)
+            _selectLine:    function(evt)
                             {
                                 var target = evt.target;
                                 while(!target.lineId)
@@ -183,7 +190,7 @@
                                 }
 
                                 var line = null;
-                                this.data   .some   (   function(d)
+                                this.lines  .some   (   function(d)
                                                         {
                                                             if(d.id == target.lineId)
                                                             {
@@ -193,21 +200,51 @@
                                                         }
                                                     );
 
-                                // Léger délai pour avoir une jolie animation "ripple" sur le bouton
-                                var ctrl = this;
-                                this        .async  (   function()
-                                                        {
-                                                            ctrl.selectedLine = line;
-                                                            ctrl.$.addDialog.notifyResize();
-                                                        },
-                                                        250
-                                                    );
+                                this.selectedLine = line;
+                                this.$.addDialog.notifyResize();
+
                             },
-            retourLignes:   function(evt)
+            _selectStop:    function(evt)
                             {
-                                this.selectedLine = null;
+                                var target = evt.target;
+                                while(!target.stopId)
+                                {
+                                    target = target.parentElement;
+                                }
+
+                                var line = this.selectedLine;
+
+                                var stop = null;
+                                this.stops  .some   (   function(s)
+                                                        {
+                                                            if(s.id == target.stopId)
+                                                            {
+                                                                stop = s;
+                                                                return true;
+                                                            }
+                                                        }
+                                                    );
+
+                                var ret =   {
+                                                stop_name:      stop.value,
+                                                line_number:    line.code,
+                                                id:             line.id + "-" + stop.id,
+                                                stop_id:        stop.id,
+                                                line_id:        line.id,
+                                                line_priorite:  line.priorite,
+                                                directions:     line.directions
+                                            };
+                                            console.log(line);
+                                console.log(ret);
+                                this.fire('stop-selected', { stop : ret});
+                                this.close();
+                            },
+            _retourLignes:  function(evt)
+                            {
+                                this.resetState();
                                 this.$.addDialog.notifyResize();
                             }
+
 
         });
     </script>
