@@ -192,8 +192,16 @@
                                                             }
                                                         }
                                                     );
-                                this.selectedLine = line;
-                                this.$.addDialog.notifyResize();
+
+                                // Léger délai pour avoir une jolie animation "ripple" sur le bouton
+                                var ctrl = this;
+                                this        .async  (   function()
+                                                        {
+                                                            ctrl.selectedLine = line;
+                                                            ctrl.$.addDialog.notifyResize();
+                                                        },
+                                                        500
+                                                    );
                             },
             retourLignes:   function(evt)
                             {
