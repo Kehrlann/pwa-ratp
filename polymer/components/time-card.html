@@ -149,10 +149,10 @@
             }
         </style>
 
-        <paper-swipe    on-edge="disableAction"
-                        peek-offset="-1000"
+        <paper-swipe    peek-offset="[[ peekOffset ]]"
                         slide-offset="50"
                         id="swipe"
+                        disable-swipe
         >
             <iron-ajax
                 url="/api"
@@ -169,15 +169,15 @@
                     <iron-icon icon="delete"></iron-icon>
                     <div class="text flex-none">SUPPRIMER</div>
                 </div>
-                <div class="cancel flex horizontal layout center center-justified" on-tap="resetAction">
+                <div class="cancel flex horizontal layout center center-justified" on-tap="resetActions">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="undo"></iron-icon>
                     <div class="text flex-none">ANNULER</div>
                 </div>
             </div>
 
-            <paper-card content id="content">
-                <paper-ripple></paper-ripple>
+            <paper-card content id="content" on-tap="showActions">
+                <paper-ripple noink="[[ !canDelete ]]"></paper-ripple>
                 <div class="horizontal layout mb10">
                     <div class$="[[getSmallIcon(referenceData)]]"></div>
                     <div class="stop-name flex-auto ellipsis">[[ referenceData.stop_name ]]</div>
@@ -236,8 +236,42 @@
                                     {
                                         type:       Array,
                                         computed:   "deserializeXML(referenceData, horaires, 1)"
+                                    },
+                                    canDelete:
+                                    {
+                                        type:       Boolean,
+                                        observer:   'canDeleteObserver'
+                                    },
+                                    isSwiped:
+                                    {
+                                        type:       Boolean,
+                                        value:      false
+                                    },
+                                    peekOffset:
+                                    {
+                                        type:       Number,
+                                        value:      -1000
+                                    },
+                                    cardBeingEdited:
+                                    {
+                                        type:       String,
+                                        observer:   'cardBeingEditedObserver'
                                     }
                                 },
+            canDeleteObserver:  function(newValue, oldValue)
+                                {
+                                    if(oldValue && ! newValue)
+                                    {
+                                        this.resetActions();
+                                    }
+                                },
+            cardBeingEditedObserver:function(newValue, oldValue)
+                                    {
+                                        if(newValue && newValue != this.referenceData.id)
+                                        {
+                                            this.resetActions();
+                                        }
+                                    },
             computeHttpOptions: function(data)
                                 {
                                     if  (   data
@@ -338,27 +372,25 @@
                                     var icon = (data && data.line_number) ? "icon-" + data.line_number : "";
                                     return base_classes + icon;
                                 },
-            resetAction:        function(ev)
+            getDisableSwipe:    function(canDelete, isSwiped)
                                 {
-                                    var target = ev.target;
-                                    if (ev.type === 'tap-underlay') {
-                                        target = ev.detail.target.target;
-                                    }
-                                    while (target.localName !== 'paper-swipe') {
-                                        target = target.parentElement;
-                                    }
-                                    target.removeAttribute('disable-swipe');
-                                    target.resetPosition();
+                                    return !canDelete || isSwiped;
                                 },
-            disableAction:      function(ev)
+            resetActions:       function(ev)
                                 {
-                                    var target = ev.target;
-                                    while (target.localName !== 'paper-swipe'){
-                                        target = target.parentElement;
-                                    }
-                                    target.setAttribute('disable-swipe', true);
+                                    this.isSwiped = false;
+                                    this.$.swipe.resetPosition();
                                 },
-            deleteCard:         function(ev)
+            showActions:        function(evt)
+                                {
+                                    if(this.canDelete)
+                                    {
+                                        this.isSwiped = true;
+                                        this.$.swipe._moveDrawer(this.$.swipe.offsetWidth - this.peekOffset);
+                                        this.fire("show-actions", { cardId : this.referenceData.id });
+                                    }
+                                },
+            deleteCard:         function(evt)
                                 {
                                     // Transformer l'élément en le "poussant" en dehors de l'écran,
                                     // avant de fire un événement de suppression.
@@ -371,7 +403,7 @@
                                     var cardTransform = this.$.content.style.transform;
                                     this.$.swipe.toggleClass("swipeout", true);
                                     this.$.swipe.transform(cardTransform);
-                                    this.async  (   function(){this.fire('delete-card', { id: this.referenceData.id })},
+                                    this.async  (   function(){this.fire('delete-card', { cardId: this.referenceData.id })},
                                                     200
                                                 );
                                 }

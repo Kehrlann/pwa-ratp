@@ -7,6 +7,7 @@
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-styles/paper-styles.html">
 
 <link rel="import" href="/bower_components/platinum-https-redirect/platinum-https-redirect.html">
 <link rel="import" href="/bower_components/platinum-sw/platinum-sw-register.html">
@@ -38,6 +39,11 @@
             {
                 padding-top: 10px;
                 padding-bottom: 10px;
+            }
+
+            .canDelete
+            {
+                color: var(--paper-amber-500);
             }
         </style>
 
@@ -76,6 +82,7 @@
             <paper-toolbar>
                 <paper-icon-button icon="menu"></paper-icon-button>
                 <span class="title">RATP</span>
+                <paper-icon-button icon="delete" on-tap="toggleDelete" class$="[[getDeleteClass(canDelete)]]"></paper-icon-button>
                 <paper-icon-button icon="add" on-tap="openAddDialog">+</paper-icon-button>
                 <paper-icon-button icon="refresh" on-tap="refresh"></paper-icon-button>
             </paper-toolbar>
@@ -83,13 +90,17 @@
             <!-- Cards -->
             <template   class="content vertical layout"
                         is="dom-repeat"
-                        items="{{preferences}}"
+                        items="[[ preferences ]]"
                         sort="sortPreferences"
             >
 
-                <time-card  reference-data="{{item}}"
-                            update-time="{{updateTime}}"
-                            on-delete-card="deleteCard"
+                <time-card  reference-data=     "[[ item ]]"
+                            card-id=            "[[ item.id ]]"
+                            update-time=        "[[ updateTime ]]"
+                            can-delete=         "[[ canDelete ]]"
+                            card-being-edited=  "[[ cardBeingEdited ]]"
+                            on-show-actions=    "showActionsForCard"
+                            on-delete-card=     "deleteCard"
                 >
                 </time-card>
             </template>
@@ -121,6 +132,16 @@
                 {
                     type:       Boolean,
                     value:      JSON.parse(localStorage.getItem("userHasInteracted"))
+                },
+                canDelete:
+                {
+                    type:       Boolean,
+                    value:      false
+                },
+                cardBeingEdited:
+                {
+                    type:       String,
+                    value:      null
                 }
             },
             getPreferences:     function()
@@ -170,81 +191,6 @@
                                                     }
                                                 ];
                                     }
-
-                                    // return  [
-                                    //             {
-                                    //                 stop_name:      "Glacière",
-                                    //                 line_number:    "6",
-                                    //                 id:             "12-208",
-                                    //                 stop_id:        208,
-                                    //                 line_id:        12,
-                                    //                 priority:       0,
-                                    //                 directions:     [
-                                    //                                     {
-                                    //                                         value:  "Charles de Gaulle-Etoile",
-                                    //                                         id:     23
-                                    //                                     },
-                                    //                                     {
-                                    //                                         value:  "Nation",
-                                    //                                         id:     24
-                                    //                                     }
-                                    //                                 ]
-                                    //             },
-                                    //             {
-                                    //                 stop_name:      "Charles de Gaulle - Étoile",
-                                    //                 line_number:    "6",
-                                    //                 id:             "12-19",
-                                    //                 stop_id:        19,
-                                    //                 line_id:        12,
-                                    //                 priority:       1,
-                                    //                 directions:     [
-                                    //                                     {
-                                    //                                         value:  "Charles de Gaulle-Etoile",
-                                    //                                         id:     23
-                                    //                                     },
-                                    //                                     {
-                                    //                                         value:  "Nation",
-                                    //                                         id:     24
-                                    //                                     }
-                                    //                                 ]
-                                    //             },
-                                    //             {
-                                    //                 stop_name:      "Charles de Gaulle - Étoile",
-                                    //                 line_number:    "A",
-                                    //                 id:             "19-19",
-                                    //                 stop_id:        19,
-                                    //                 line_id:        19,
-                                    //                 priority:       2,
-                                    //                 directions:     [
-                                    //                                     {
-                                    //                                         value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
-                                    //                                         id:     37
-                                    //                                     },
-                                    //                                     {
-                                    //                                         value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
-                                    //                                         id:     38
-                                    //                                     }
-                                    //                                 ]
-                                    //             },
-                                    //             {
-                                    //                 stop_name:      "Nanterre-Préfecture",
-                                    //                 line_number:    "A",
-                                    //                 id:             "19-319",
-                                    //                 stop_id:        319,
-                                    //                 line_id:        19,
-                                    //                 priority:       3,
-                                    //                 directions:     [
-                                    //                                     {
-                                    //                                         value:  "Marne-la-Vallee Chessy / Boissy-Saint-Leger",
-                                    //                                         id:     37
-                                    //                                     },
-                                    //                                     {
-                                    //                                         value:  "Cergy-Le-Haut / Poissy / Saint-Germain-en-Laye",
-                                    //                                         id:     38
-                                    //                                     }
-                                    //                                 ]
-                                    //             }
-                                    //         ];
                                 },
             deleteFromPrefs:    function(id)
                                 {
@@ -297,9 +243,9 @@
                                 },
             deleteCard:         function(evt, opt)
                                 {
-                                    if  (opt && opt.id)
+                                    if  (opt && opt.cardId)
                                     {
-                                        this.deleteFromPrefs(opt.id);
+                                        this.deleteFromPrefs(opt.cardId);
                                     }
                                 },
             ready:              function()
@@ -313,6 +259,21 @@
             openAddDialog:      function(evt)
                                 {
                                     this.$.addDialog.open();
+                                },
+            toggleDelete:       function(evt)
+                                {
+                                    this.canDelete = !this.canDelete;
+                                },
+            getDeleteClass:     function(canDelete)
+                                {
+                                    return canDelete ? "canDelete" : "";
+                                },
+            showActionsForCard: function(evt, opt)
+                                {
+                                    if(opt && opt.cardId)
+                                    {
+                                        this.cardBeingEdited = opt.cardId;
+                                    }
                                 }
         });
     </script>
