@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/paper-spinner/paper-spinner.html">
 
 <link rel="import" href="icon-classes.html">
 <link rel="import" href="date-span.html">
@@ -86,6 +87,11 @@
                 width: 40px;
             }
 
+            .spinner-wrapper
+            {
+                width:          120px;   /* (40*3 largeur de stop) */
+            }
+
             .ellipsis {
                 overflow-x: hidden;
                 white-space: nowrap;
@@ -142,6 +148,11 @@
                     width: 40px;
                     margin-left: 5px;
                 }
+                .spinner-wrapper
+                {
+                    width:          130px;   /* (40*3 largeur de stop) + (2*5px la marge) */
+                    margin-left:    5px;
+                }
                 .date-small
                 {
                     display: block;
@@ -156,9 +167,11 @@
         >
             <iron-ajax
                 url="/api"
-                params='{{computeHttpOptions(referenceData)}}'
+                timeout="1000"
                 handle-as="xml"
                 last-response="{{horaires}}"
+                params='{{computeHttpOptions(referenceData)}}'
+                loading="{{ loading }}"
                 id="ajax"
             >
             </iron-ajax>
@@ -190,18 +203,28 @@
                         <div class="ellipsis">[[ getNomDirection(referenceData, 0)]]</div>
                         <div class="ellipsis">[[ getNomDirection(referenceData, 1)]]</div>
                     </div>
-                    <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(horairesAller,  0) ]]</div>
-                        <div class="ellipsis">[[ getTemps(horairesRetour, 0) ]]</div>
-                    </div>
-                    <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(horairesAller,  1) ]]</div>
-                        <div class="ellipsis">[[ getTemps(horairesRetour, 1) ]]</div>
-                    </div>
-                    <div class="stop flex-auto vertical layout around-justified">
-                        <div class="ellipsis">[[ getTemps(horairesAller,  2) ]]</div>
-                        <div class="ellipsis">[[ getTemps(horairesRetour, 2) ]]</div>
-                    </div>
+
+                    <template is="dom-if" if="[[ noRequestsPending(loading) ]]">
+                        <div class="stop flex-auto vertical layout around-justified">
+                            <div class="ellipsis">[[ getTemps(horairesAller,  0) ]]</div>
+                            <div class="ellipsis">[[ getTemps(horairesRetour, 0) ]]</div>
+                        </div>
+                        <div class="stop flex-auto vertical layout around-justified">
+                            <div class="ellipsis">[[ getTemps(horairesAller,  1) ]]</div>
+                            <div class="ellipsis">[[ getTemps(horairesRetour, 1) ]]</div>
+                        </div>
+                        <div class="stop flex-auto vertical layout around-justified">
+                            <div class="ellipsis">[[ getTemps(horairesAller,  2) ]]</div>
+                            <div class="ellipsis">[[ getTemps(horairesRetour, 2) ]]</div>
+                        </div>
+                    </template>
+
+                    <template is="dom-if" if="[[ loading ]]">
+                        <div class="spinner-wrapper flex-auto horizontal layout center-justified center">
+                            <paper-spinner active="[[ loading ]]"></paper-spinner>
+                        </div>
+                    </template>
+
                 </div>
             </paper-card>
         </paper-swipe>
@@ -406,6 +429,10 @@
                                     this.async  (   function(){this.fire('delete-card', { cardId: this.referenceData.id })},
                                                     200
                                                 );
+                                },
+            noRequestsPending:  function(loading)
+                                {
+                                    return !loading;
                                 }
         });
     </script>
