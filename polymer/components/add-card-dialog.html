@@ -42,7 +42,11 @@
 
         </style>
 
-        <paper-dialog id="addDialog" with-backdrop="true">
+        <paper-dialog   id="addDialog"
+                        with-backdrop="true"
+                        on-iron-overlay-closed="resetState"
+                        on-iron-overlay-canceled="resetState"
+                        >
             <h2>Ajouter un favori</h2>
 
             <paper-dialog-scrollable>
