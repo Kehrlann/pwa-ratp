@@ -8,6 +8,7 @@
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="/bower_components/platinum-https-redirect/platinum-https-redirect.html">
 <link rel="import" href="/bower_components/platinum-sw/platinum-sw-register.html">
@@ -41,9 +42,15 @@
                 padding-bottom: 10px;
             }
 
-            .canDelete
+            .can-delete
             {
                 color: var(--paper-amber-500);
+                cursor:pointer;
+            }
+
+            .toast-action
+            {
+                float:right;
             }
         </style>
 
@@ -51,6 +58,18 @@
         <paper-toast    id="caching"
                         duration="5000"
                         text="Données mises en cache ! L'app fonctionnera hors ligne.">
+        </paper-toast>
+
+        <paper-toast    id="cancelDelete"
+                        text="Mode suppression"
+                        opened="[[ canDelete ]]"
+                        duration="0"
+                        on-tap="cancelDelete"
+        >
+            <div class="can-delete toast-action">
+                ANNULER
+                <paper-ripple></paper-ripple>
+            </div>
         </paper-toast>
 
         <!-- <platinum-https-redirect></platinum-https-redirect> -->
@@ -224,6 +243,7 @@
                                 },
             refresh:            function()
                                 {
+                                    this.cancelDelete();
                                     this.updateTime = new Date().getTime();
                                 },
             sortPreferences:    function(a, b)
@@ -258,15 +278,20 @@
                                 },
             openAddDialog:      function(evt)
                                 {
+                                    this.cancelDelete();
                                     this.$.addDialog.open();
                                 },
             toggleDelete:       function(evt)
                                 {
                                     this.canDelete = !this.canDelete;
                                 },
+            cancelDelete:       function(evt)
+                                {
+                                    this.canDelete = false;
+                                },
             getDeleteClass:     function(canDelete)
                                 {
-                                    return canDelete ? "canDelete" : "";
+                                    return canDelete ? "can-delete" : "";
                                 },
             showActionsForCard: function(evt, opt)
                                 {
