@@ -1,0 +1,82 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="icon-classes.html">
+
+<dom-module id="add-card-line-list">
+    <template>
+        <style include="iron-flex iron-flex-alignment iron-positioning icon-classes">
+
+            .icon
+            {
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 32px;
+                height: 32px;
+                margin-right: 15px;
+            }
+
+            .ellipsis {
+                overflow-x: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .line
+            {
+                padding:        10px 0;
+                border-bottom:  1px solid #999;
+            }
+
+        </style>
+
+        <template is="dom-repeat" items="{{lines}}">
+            <div class="horizontal center layout line" on-tap="_selectLine" line-id="[[item.id]]">
+                <div class$="[[_getIcon(item)]]"></div>
+                <div class="flex ellipsis">{{ item.name }}</div>
+            </div>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: "add-card-line-list",
+            properties:
+            {
+                lines:          {
+                                    type:       Array,
+                                    value:      []
+                                }
+            },
+            _getIcon:       function(data)
+                            {
+                                var base_classes = "icon flex-none " ;
+                                var icon = (data && data.code) ? "icon-" + data.code : "";
+                                return base_classes + icon;
+                            },
+            _selectLine:    function(evt)
+                            {
+                                var target = evt.target;
+                                while(!target.lineId)
+                                {
+                                    target = target.parentElement;
+                                }
+
+                                var line = null;
+                                this.lines  .some   (   function(d)
+                                                        {
+                                                            if(d.id == target.lineId)
+                                                            {
+                                                                line = d;
+                                                                return true;
+                                                            }
+                                                        }
+                                                    );
+
+                                this.fire("select-line", { line : line });
+                            }
+        });
+    </script>
+</dom-module>

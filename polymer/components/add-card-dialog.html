@@ -4,19 +4,20 @@
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="/bower_components/neon-animation/animations/slide-from-bottom-animation.html">
 <link rel="import" href="/bower_components/neon-animation/animations/slide-down-animation.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
 
+<link rel="import" href="add-card-line-list.html">
+<link rel="import" href="add-card-stop-list.html">
 
-<link rel="import" href="icon-classes.html">
 
 <dom-module id="add-card-dialog">
     <template>
-        <style include="iron-flex iron-flex-alignment iron-positioning icon-classes">
+        <style include="iron-flex iron-flex-alignment iron-positioning">
 
             #addDialog
             {
@@ -31,17 +32,10 @@
             {
                 #addDialog
                 {
-                    width:90%;
+                    width:auto;
+                    right:0;
+                    left:0;
                 }
-            }
-
-            .icon
-            {
-                background-repeat: no-repeat;
-                background-size: contain;
-                width: 32px;
-                height: 32px;
-                margin-right: 15px;
             }
 
             .ellipsis {
@@ -76,20 +70,18 @@
             <div class="flex scrollable">
 
                 <template is="dom-if" if="{{!selectedLine}}">
-                    <template is="dom-repeat" items="{{lines}}">
-                        <div class="horizontal center layout line" on-tap="_selectLine" line-id="[[item.id]]">
-                            <div class$="[[_getIcon(item)]]"></div>
-                            <div class="flex ellipsis">{{ item.name }}</div>
-                        </div>
-                    </template>
+                    <add-card-line-list     lines="[[ lines ]]"
+                                            on-select-line="_selectLine"
+                    >
+                    </add-card-line-list>
                 </template>
 
                 <template is="dom-if" if="{{selectedLine}}">
-                    <template is="dom-repeat" items="{{stops}}">
-                        <div class="line" on-tap="_selectStop" stop-id="[[item.id]]">
-                            <div class="ellipsis">{{ item.value }}</div>
-                        </div>
-                    </template>
+                    <add-card-stop-list     stops="[[ stops ]]"
+                                            on-stop-selected="_selectStop"
+                                            selected-line="[[ selectedLine ]]"
+                    >
+                    </add-card-stop-list>
                 </template>
 
 
@@ -203,67 +195,21 @@
                                     return [];
                                 }
                             },
-            _getIcon:       function(data)
+            _selectLine:    function(evt, opt)
                             {
-                                var base_classes = "icon flex-none " ;
-                                var icon = (data && data.code) ? "icon-" + data.code : "";
-                                return base_classes + icon;
-                            },
-            _selectLine:    function(evt)
-                            {
-                                var target = evt.target;
-                                while(!target.lineId)
+                                if(opt && opt.line)
                                 {
-                                    target = target.parentElement;
+                                    this.selectedLine = opt.line;
                                 }
-
-                                var line = null;
-                                this.lines  .some   (   function(d)
-                                                        {
-                                                            if(d.id == target.lineId)
-                                                            {
-                                                                line = d;
-                                                                return true;
-                                                            }
-                                                        }
-                                                    );
-
-                                this.selectedLine = line;
-                                this.$.addDialog.notifyResize();
-
                             },
-            _selectStop:    function(evt)
+            _selectStop:    function(evt, opt)
                             {
-                                var target = evt.target;
-                                while(!target.stopId)
+                                if(opt && opt.stop)
                                 {
-                                    target = target.parentElement;
+                                    evt.stopPropagation();
+                                    this.fire('stop-selected', { stop : opt.stop });
+                                    this.close();
                                 }
-
-                                var line = this.selectedLine;
-
-                                var stop = null;
-                                this.stops  .some   (   function(s)
-                                                        {
-                                                            if(s.id == target.stopId)
-                                                            {
-                                                                stop = s;
-                                                                return true;
-                                                            }
-                                                        }
-                                                    );
-
-                                var ret =   {
-                                                stop_name:      stop.value,
-                                                line_number:    line.code,
-                                                id:             line.id + "-" + stop.id,
-                                                stop_id:        stop.id,
-                                                line_id:        line.id,
-                                                line_priorite:  line.priorite,
-                                                directions:     line.directions
-                                            };
-                                this.fire('stop-selected', { stop : ret});
-                                this.close();
                             },
             _retourLignes:  function(evt)
                             {
