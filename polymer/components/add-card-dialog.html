@@ -53,6 +53,19 @@
             .scrollable
             {
                 overflow-y:     auto;
+                overflow-x:     hidden;
+            }
+
+            neon-animated-pages > *
+            {
+                position: static;
+                /*box-sizing: border-box;*/
+            }
+
+            neon-animated-pages.transition > *
+            {
+                position: absolute;
+                /*box-sizing: border-box;*/
             }
 
         </style>
@@ -67,25 +80,20 @@
                         >
             <h2 class="flex-none">Ajouter un favori</h2>
 
-            <div class="flex scrollable">
-
-                <template is="dom-if" if="{{!selectedLine}}">
+                <neon-animated-pages    selected="0"
+                                        id="pageContainer"
+                                        class="flex layout vertical scrollable"
+                >
                     <add-card-line-list     lines="[[ lines ]]"
                                             on-select-line="_selectLine"
                     >
                     </add-card-line-list>
-                </template>
-
-                <template is="dom-if" if="{{selectedLine}}">
                     <add-card-stop-list     stops="[[ stops ]]"
                                             on-stop-selected="_selectStop"
                                             selected-line="[[ selectedLine ]]"
                     >
                     </add-card-stop-list>
-                </template>
-
-
-            </div>
+                </neon-animated-pages>
 
             <div class="buttons flex-none">
                 <template is="dom-if" if="{{selectedLine}}">
@@ -140,6 +148,7 @@
             resetState:     function(evt)
                             {
                                 this.selectedLine = null;
+                                this.$.pageContainer.selected = 0;
                             },
             close:          function(evt)
                             {
@@ -200,6 +209,11 @@
                                 if(opt && opt.line)
                                 {
                                     this.selectedLine = opt.line;
+                                    var container = this.$.pageContainer;
+                                    var initialList = this.$.pageContainer.classList +"";
+                                    container.classList += " transition";
+                                    container.selected = 1;
+                                    this.async(function(){ container.classList = initialList;}, 450)
                                 }
                             },
             _selectStop:    function(evt, opt)
@@ -213,11 +227,13 @@
                             },
             _retourLignes:  function(evt)
                             {
+                                var container = this.$.pageContainer;
+                                var initialList = this.$.pageContainer.classList +"";
+                                container.classList += " transition";
+                                container.selected = 0;
+                                this.async(function(){ container.classList = initialList;}, 450)
                                 this.resetState();
-                                this.$.addDialog.notifyResize();
                             }
-
-
         });
     </script>
 </dom-module>

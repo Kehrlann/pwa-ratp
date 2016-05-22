@@ -1,12 +1,12 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-
-<link rel="import" href="icon-classes.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="/bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/slide-right-animation.html">
 
 <dom-module id="add-card-stop-list">
     <template>
-        <style include="iron-flex iron-flex-alignment iron-positioning icon-classes">
+        <style>
             .ellipsis {
                 overflow-x: hidden;
                 white-space: nowrap;
@@ -17,15 +17,6 @@
             {
                 padding:        10px 0;
                 border-bottom:  1px solid #999;
-            }
-
-            .icon
-            {
-                background-repeat: no-repeat;
-                background-size: contain;
-                width: 32px;
-                height: 32px;
-                margin-right: 15px;
             }
         </style>
 
@@ -40,6 +31,7 @@
     <script>
         Polymer({
             is: "add-card-stop-list",
+            behaviors:      [Polymer.NeonAnimatableBehavior],
             properties:
             {
                 stops:          {
@@ -49,6 +41,23 @@
                 selectedLine:   {
                                     type:       Object,
                                     value:      null
+                                },
+                animationConfig:{
+                                    value:      function()
+                                                {
+                                                    return  {
+                                                                entry:  {
+                                                                            name:   'slide-from-right-animation',
+                                                                            node:   this,
+                                                                            timing: {   duration:   500}
+                                                                        },
+                                                                exit:   {
+                                                                            name:   'slide-right-animation',
+                                                                            node:   this,
+                                                                            timing: {  duration:   500}
+                                                                        }
+                                                            };
+                                                }
                                 }
             },
             _selectStop:    function(evt)
