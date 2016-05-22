@@ -72,6 +72,13 @@
             </div>
         </paper-toast>
 
+        <paper-toast    id="addingCard"
+                        duration="2000"
+                        text="Favori ajouté !">
+        </paper-toast>
+
+
+
         <!-- <platinum-https-redirect></platinum-https-redirect> -->
 
         <platinum-sw-register   auto-register
@@ -258,6 +265,7 @@
                                 {
                                     if (opt && opt.stop)
                                     {
+                                        this.$.addingCard.show();
                                         this.addToPrefs(opt.stop);
                                     }
                                 },
