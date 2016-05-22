@@ -4,9 +4,22 @@
 <link rel="import" href="/bower_components/neon-animation/animations/slide-from-right-animation.html">
 <link rel="import" href="/bower_components/neon-animation/animations/slide-right-animation.html">
 
+<link rel="import" href="icon-classes.html">
+
 <dom-module id="add-card-stop-list">
     <template>
-        <style>
+        <style include="icon-classes">
+            :host
+            {
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+            }
+
+            :host > *
+            {
+                padding: 0 24px;
+            }
+
             .ellipsis {
                 overflow-x: hidden;
                 white-space: nowrap;
@@ -18,13 +31,43 @@
                 padding:        10px 0;
                 border-bottom:  1px solid #999;
             }
+
+
+            .scrollable
+            {
+                overflow-y:     auto;
+                margin-top:     24px;
+            }
+
+
+
+            .icon
+            {
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 32px;
+                height: 32px;
+                margin-right: 15px;
+            }
+
+
         </style>
 
-        <template is="dom-repeat" items="{{stops}}">
-            <div class="line" on-tap="_selectStop" stop-id="[[item.id]]">
-                <div class="ellipsis">{{ item.value }}</div>
+
+        <h2 class="flex-none">
+            <div class="horizontal center layout">
+                <div class$="[[_getIcon(selectedLine)]]" id="hero"></div>
+                <div class="flex ellipsis">{{ selectedLine.name }}</div>
             </div>
-        </template>
+        </h2>
+
+        <div class="flex scrollable">
+            <template is="dom-repeat" items="{{stops}}">
+                <div class="line" on-tap="_selectStop" stop-id="[[item.id]]">
+                    <div class="ellipsis">{{ item.value }}</div>
+                </div>
+            </template>
+        </div>
 
     </template>
 
@@ -49,7 +92,7 @@
                                                                 entry:  {
                                                                             name:   'slide-from-right-animation',
                                                                             node:   this,
-                                                                            timing: {   duration:   500}
+                                                                            timing: {   duration:   500 }
                                                                         },
                                                                 exit:   {
                                                                             name:   'slide-right-animation',
@@ -60,6 +103,12 @@
                                                 }
                                 }
             },
+            _getIcon:       function(data)
+                            {
+                                var base_classes = "icon flex-none " ;
+                                var icon = (data && data.code) ? "icon-" + data.code : "";
+                                return base_classes + icon;
+                            },
             _selectStop:    function(evt)
                             {
                                 var target = evt.target;

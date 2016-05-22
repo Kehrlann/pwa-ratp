@@ -50,27 +50,9 @@
                 border-bottom:  1px solid #999;
             }
 
-            .scrollable
+            neon-animated-pages
             {
-                overflow-y:     auto;
                 overflow-x:     hidden;
-            }
-
-            neon-animated-pages > *
-            {
-                position: static;
-                /*box-sizing: border-box;*/
-            }
-
-            neon-animated-pages.transition
-            {
-                overflow: hidden;
-            }
-
-            neon-animated-pages.transition > *
-            {
-                position: absolute;
-                /*box-sizing: border-box;*/
             }
 
         </style>
@@ -83,11 +65,9 @@
                         exit-animation="slide-down-animation"
                         class="layout vertical"
                         >
-            <h2 class="flex-none">Ajouter un favori</h2>
-
-                <neon-animated-pages    selected="0"
+                <neon-animated-pages    selected="{{ selected }}"
                                         id="pageContainer"
-                                        class="flex layout vertical scrollable"
+                                        class="flex"
                 >
                     <add-card-line-list     lines="[[ lines ]]"
                                             on-select-line="_selectLine"
@@ -101,7 +81,7 @@
                 </neon-animated-pages>
 
             <div class="buttons flex-none">
-                <template is="dom-if" if="{{selectedLine}}">
+                <template is="dom-if" if="{{_isStopPages(selected)}}">
                     <paper-button on-tap="_retourLignes">Retour</paper-button>
                 </template>
                 <paper-button dialog-dismiss>Annuler</paper-button>
@@ -126,6 +106,10 @@
             is: "add-card-dialog",
             properties:
             {
+                selected:       {
+                                    type:       Number,
+                                    value:      0
+                                },
                 data:           {
                                     type:       Array,
                                     value:      null
@@ -152,8 +136,8 @@
                             },
             resetState:     function(evt)
                             {
+                                this.selected = 0;
                                 this.selectedLine = null;
-                                this.$.pageContainer.selected = 0;
                             },
             close:          function(evt)
                             {
@@ -214,11 +198,7 @@
                                 if(opt && opt.line)
                                 {
                                     this.selectedLine = opt.line;
-                                    var container = this.$.pageContainer;
-                                    var initialList = this.$.pageContainer.classList +"";
-                                    container.classList += " transition";
-                                    container.selected = 1;
-                                    this.async(function(){ container.classList = initialList;}, 450)
+                                    this.selected = 1;
                                 }
                             },
             _selectStop:    function(evt, opt)
@@ -232,12 +212,12 @@
                             },
             _retourLignes:  function(evt)
                             {
-                                var container = this.$.pageContainer;
-                                var initialList = this.$.pageContainer.classList +"";
-                                container.classList += " transition";
-                                container.selected = 0;
-                                this.async(function(){ container.classList = initialList;}, 450)
-                                this.resetState();
+                                this.selected = 0;
+                                this.async(this.resetState, 500);
+                            },
+            _isStopPages:   function(selected)
+                            {
+                                return selected == 1;
                             }
         });
     </script>
