@@ -27,8 +27,8 @@
             _formatDate:    function(dateAsString)
                             {
                                 var tempDate    =   dateAsString ? new Date(dateAsString) : new Date();
-                                var day         =   this._padWithZero(tempDate.getDay());
-                                var month       =   this._padWithZero(tempDate.getMonth());
+                                var day         =   this._padWithZero(tempDate.getDate());
+                                var month       =   this._padWithZero(tempDate.getMonth() + 1);
                                 var year        =   tempDate.getFullYear();
                                 var hours       =   this._padWithZero(tempDate.getHours());
                                 var minutes     =   this._padWithZero(tempDate.getMinutes());
