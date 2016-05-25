@@ -82,6 +82,20 @@
                 padding: 12px;
                 font-weight: bold;
                 position: relative;
+                cursor: pointer;
+            }
+
+            .drawer-text
+            {
+                padding: 12px 24px;
+                line-height: 30px;
+            }
+
+            .drawer-text > a
+            {
+                color: #129983;
+                font-weight: bold;
+                text-decoration: none;
             }
 
             .bottom-line
@@ -118,8 +132,6 @@
                         text="Favori ajouté !">
         </paper-toast>
 
-
-
         <!-- <platinum-https-redirect></platinum-https-redirect> -->
 
         <platinum-sw-register   auto-register
@@ -146,24 +158,29 @@
         <paper-drawer-panel force-narrow
                             id="drawerPanel"
         >
-            <div drawer>
-                <div class="drawer-header horizontal center layout">
+            <div class="layout vertical" drawer>
+                <div class="drawer-header horizontal center layout flex-none">
                     <div class="icon-ratp"></div>
                     <div class="flex">RATP</div>
                 </div>
-                <div class="drawer-button bottom-line top-line" on-tap="openAddDialog">
+                <div class="drawer-button bottom-line top-line flex-none" on-tap="openAddDialog">
                     <paper-ripple></paper-ripple>
                     Ajouter
                 </div>
-                <div class="drawer-button bottom-line" on-tap="toggleDelete">
+                <div class="drawer-button bottom-line flex-none" on-tap="toggleDelete">
                     <paper-ripple></paper-ripple>
                     Supprimer
                 </div>
-                <div class="drawer-button bottom-line" on-tap="refresh">
+                <div class="drawer-button bottom-line flex-none" on-tap="refresh">
                     <paper-ripple></paper-ripple>
                     Rafraîchir
                 </div>
-
+                <div class="flex"></div>
+                <div class="flex-none drawer-text">
+                    Made with <b>&lt;3</b> by <a href="http://cv.garnier.wf/" target="_blank">DGM</a>.
+                    <br>
+                    Source code on <a href="https://github.com/Kehrlann/pwa-ratp/" target="_blank">Github</a>.
+                </div>
             </div>
 
             <paper-header-panel class="ratp-panel fit" id="panel" main>
