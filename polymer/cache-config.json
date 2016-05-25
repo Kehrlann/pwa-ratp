@@ -23,10 +23,10 @@
                                 "/images/14.svg",
                                 "/images/A.svg",
                                 "/images/B.svg",
-                                "/images/ic_refresh_white_24px.svg",
+                                "/images/icons/icon-128x128.png",
                                 "/images/RATP.svg",
                                 "/data/line.json",
                                 "/data/stops.json"
                             ],
-    "precacheFingerprint":  "4"
+    "precacheFingerprint":  "5"
 }
