@@ -148,7 +148,7 @@
             >
             </platinum-sw-fetch>
 
-            <platinum-sw-cache  default-cache-strategy="networkFirst"
+            <platinum-sw-cache  default-cache-strategy="fastest"
                                 cache-config-file="/cache-config.json"
             >
             </platinum-sw-cache>
@@ -157,6 +157,7 @@
 
         <paper-drawer-panel force-narrow
                             id="drawerPanel"
+                            drawer-focus-selector=""
         >
             <div class="layout vertical" drawer>
                 <div class="drawer-header horizontal center layout flex-none">
