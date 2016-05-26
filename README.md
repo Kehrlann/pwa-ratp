@@ -15,7 +15,7 @@ performance, ni sur les tests...
 
 ## Screenshots
 
-![Screenshot de l'application](https://raw.githubusercontent.com/Kehrlann/pwa-ratp/master/screenshots/pwa-ratp.png)
+![Screenshot de l'application](https://raw.githubusercontent.com/Kehrlann/pwa-ratp/master/screenshots/ratp-pwa.png)
 
 ## Développement
 Le front Polymer est construit uniquement à base de composants téléchargés avec
