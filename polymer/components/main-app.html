@@ -98,6 +98,12 @@
                 text-decoration: none;
             }
 
+            .drawer-icon
+            {
+                color:          var(--paper-grey-900);
+                margin-right:   10px;
+            }
+
             .bottom-line
             {
                 border-bottom:  1px solid #999;
@@ -164,17 +170,20 @@
                     <div class="icon-ratp"></div>
                     <div class="flex">RATP</div>
                 </div>
-                <div class="drawer-button bottom-line top-line flex-none" on-tap="openAddDialog">
+                <div class="horizontal layout center drawer-button bottom-line top-line flex-none" on-tap="openAddDialog">
                     <paper-ripple></paper-ripple>
+                    <iron-icon icon="add" class="drawer-icon"></iron-icon>
                     Ajouter
                 </div>
-                <div class="drawer-button bottom-line flex-none" on-tap="toggleDelete">
+                <div class="horizontal layout center drawer-button bottom-line flex-none" on-tap="toggleDelete">
                     <paper-ripple></paper-ripple>
+                    <iron-icon icon="delete" class="drawer-icon"></iron-icon>
                     Supprimer
                 </div>
-                <div class="drawer-button bottom-line flex-none" on-tap="refresh">
+                <div class="horizontal layout center drawer-button bottom-line flex-none" on-tap="refresh">
                     <paper-ripple></paper-ripple>
-                    Rafraîchir
+                    <iron-icon icon="refresh" class="drawer-icon"></iron-icon>
+                    <span>Rafraîchir</span>
                 </div>
                 <div class="flex"></div>
                 <div class="flex-none drawer-text">
