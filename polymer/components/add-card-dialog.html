@@ -19,22 +19,30 @@
     <template>
         <style include="iron-flex iron-flex-alignment iron-positioning">
 
+            :host
+            {
+                @apply(--layout-vertical);
+                @apply(--layout-flex);
+                @apply(--layout-center);
+            }
             #addDialog
             {
                 width:      500px;
                 max-width:  500px;
-                position:   absolute;
-                top:        0;
-                bottom:     0;
+                position:   relative;
+                @apply(--layout-flex);
             }
 
             @media(max-width:520px)
             {
                 #addDialog
                 {
-                    width:auto;
-                    right:0;
-                    left:0;
+                    width:      auto;
+                    position:   absolute;
+                    right:      0;
+                    left:       0;
+                    top:        0;
+                    bottom:     0;  
                 }
             }
 

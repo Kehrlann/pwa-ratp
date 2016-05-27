@@ -41,6 +41,7 @@ $ npm start
 ```
 
 ## Changelog
+- Version 5 - Bugfix de positionnement du dialog d'ajout de favori.
 - Version 4 - Ajout du menu et publication sur Github
   - Menu latéral
   - Ajout du README
