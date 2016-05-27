@@ -1,11 +1,11 @@
 # PWA RATP
 Progressive Web App donnant les horaires des lignes de métro parisiennes. Sur
-Android, elle est "installable", il suffit de l'ouvrir avec chrome et de faire
+Android, elle est "installable", il suffit de l'ouvrir avec Chrome et de faire
 "Ajouter à l'écran d'accueil".
 
-Une démo est disponible en ligne. Bien entendu, les données RATP n'étant pas
-publiques, le serveur fourni avec le projet permet de générer des horaires
-aléatoires :)
+Une démo est disponible en ligne sur https://ratp.garnier.wf. Bien entendu, les
+données RATP n'étant pas publiques, le serveur fourni avec le projet permet de
+générer des horaires aléatoires :)
 
 Ce petit projet avait avant tout pour but de mettre en oeuvre Polymer et les
 concepts de Progressive Web Apps poussés en ce moment par Google.
@@ -26,6 +26,9 @@ Le back est un tout petit serveur NodeJS.
 Pour commencer à développer, il vous faut juste node avec npm, et bower. Se de
 placer dans tools, installer le projet puis tle lancer. Les composants Bower
 seront automatiquement installés.
+
+Pour le déploiement, attention, pour profiter de l'aspect offline, il faut
+absolument servir l'app en HTTPS. Have fun !
 
 ```sh
 $ cd ratp-pwa.git/tools
