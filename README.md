@@ -40,6 +40,9 @@ $ npm start
 # Le serveur est ensuite dispo sur le port 3000.
 ```
 
+## Licence
+Ce projet est disponible sous [licence MIT](https://github.com/Kehrlann/pwa-ratp/blob/master/LICENSE).
+
 ## Changelog
 - Version 5 - Bugfix de positionnement du dialog d'ajout de favori.
 - Version 4 - Ajout du menu et publication sur Github
