@@ -42,7 +42,19 @@ if(api && api.baseUri && api.key)
 {
     server.all('/api', function(req, res) {
         var url = api.baseUri + req.url.replace("/api", "") + "&keyapp=" + api.key;
-        req.pipe(request(url)).pipe(res);
+        req .pipe   (   request (
+                                    url,
+                                    function(error, response, body)
+                                    {
+                                        if(error)
+                                        {
+                                            console.error("---->   Erreur de proxy HTTP");
+                                            console.error(error);
+                                        }
+                                    }
+                                )
+                    )
+            .pipe   (res);
         //res.send('Hello World!');
     });
 }
